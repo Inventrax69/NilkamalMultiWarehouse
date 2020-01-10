@@ -68,7 +68,7 @@ import retrofit2.Response;
 
 public class SkuToSkuFragment extends Fragment implements View.OnClickListener, BarcodeReader.TriggerListener, BarcodeReader.BarcodeListener {
 
-    private static final String classCode = "API_FRAG_006";
+    private static final String classCode = "API_FRAG_SkuToSkuFragment";
     private View rootView;
     private RelativeLayout rlPick, rlSelectReason, rlPrint;
     private TextView lblRefNo, lblDock, lblLocation, lblSKU, lblDesc, lblBatch, lblBox, lblReqQty, lblBalQty, lblScannedBarcode, lblCaseNo;

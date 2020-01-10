@@ -62,7 +62,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CycleCountFragmentHU extends Fragment implements View.OnClickListener, BarcodeReader.TriggerListener, BarcodeReader.BarcodeListener {
-    private static final String classCode = "API_FRAG_006";
+    private static final String classCode = "API_FRAG_CycleCountFragmentHU";
     private View rootView;
 
     private RelativeLayout rlCC;
