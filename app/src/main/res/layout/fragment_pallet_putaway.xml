@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusableInTouchMode="true"
+    android:layout_marginLeft="3dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="3dp"
+    android:background="@color/white">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rlStRefSelect"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        >
+
+        <TextView
+            android:id="@+id/tvSelectStRef"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:text="@string/selectStRef"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+        <com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner
+            android:id="@+id/spinnerSelectStRef"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tvSelectStRef"
+            android:layout_alignParentLeft="true">
+
+        </com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner>
+
+        <Button
+            android:id="@+id/btnGo"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/button_shape"
+            android:text="@string/go"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnCloseOne"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_close_shape"
+            android:elevation="30dp"
+            android:foreground="@drawable/button_cross_close"
+            android:foregroundGravity="center"
+            android:text="@string/putaway"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rlPalletPutaway"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/lblStoreRefNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvPallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/black"
+            android:text="Pallet #"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/lblStoreRefNo"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/lblPallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/lblStoreRefNo"
+            android:layout_marginTop="15dp"/>
+
+
+        <TextView
+            android:id="@+id/tvSuggestedLoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/black"
+            android:text="@string/suggestedLoc"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/tvPallet"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/lblSuggestedLoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/tvPallet"
+            android:layout_marginTop="5dp"/>
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cvScanLocation"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/lblSuggestedLoc"
+            android:layout_marginTop="15dp"
+            android:layout_centerHorizontal="true"
+            app:cardBackgroundColor="@color/locationColor"
+            app:cardCornerRadius="22.5dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/ivScanLocation"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="@drawable/fullscreen_img" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvScanLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cvScanLocation"
+            android:layout_centerHorizontal="true"
+            android:text="@string/scanLocation"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="90dp"
+            android:background="@drawable/button_shape"
+            android:elevation="30dp"
+            android:text="@string/confirm"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true" />
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/btnConfirm"
+            android:background="@drawable/button_shape"
+            android:text="@string/clear"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/btnExport"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignTop="@+id/btnConfirm"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/button_shape"
+            android:text="@string/export"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+
+
+        <Button
+            android:id="@+id/btnCloseTwo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/button_close_shape"
+            android:foreground="@drawable/button_cross_close"
+            android:foregroundGravity="center"
+            android:text="@string/putaway"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnUpdatePallet"
+            android:layout_width="160dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="48dp"
+            android:background="@drawable/button_shape"
+            android:text="@string/update_pallet_complete"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlPalletType"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone">
+
+
+        <TextView
+            android:id="@+id/tvPalletConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/black"
+            android:text="Pallet #"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/lblPalletConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/tvSelectPalletType"
+            style="@style/textViewStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tvPalletConfirm"
+            android:layout_marginTop="10dp"
+            android:text="@string/select_pallet_type"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+        <com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner
+            android:id="@+id/spinnerSelectPalletType"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tvSelectPalletType"
+            android:layout_alignParentLeft="true">
+
+        </com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner>
+
+        <Button
+            android:id="@+id/btnConfirmPallet"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/button_shape"
+            android:text="@string/confirm"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnCloseThree"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/button_close_shape"
+            android:foreground="@drawable/button_cross_close"
+            android:foregroundGravity="center"
+            android:text="@string/putaway"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

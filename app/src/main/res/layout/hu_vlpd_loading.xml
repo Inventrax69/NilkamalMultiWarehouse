@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusableInTouchMode="true"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rlVLPDSelect"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvSelectVLPDNo"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:text="Group Dispatch #"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+        <com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner
+            android:id="@+id/spinnerSelectVLPDNo"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tvSelectVLPDNo"
+            android:layout_alignParentLeft="true">
+
+        </com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner>
+
+        <Button
+            android:id="@+id/btnGo"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="65dp"
+            android:background="@drawable/button_shape"
+            android:text="@string/go"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnCloseOne"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_close_shape"
+            android:elevation="30dp"
+            android:foreground="@drawable/button_cross_close"
+            android:foregroundGravity="center"
+            android:text="@string/putaway"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rlVLPDLoading"
+        android:visibility="gone"
+        android:layout_below="@+id/rlVLPDSelect"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <TextView
+            android:id="@+id/lblVLPDNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cvScan"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            app:cardBackgroundColor="@color/scanColor"
+            app:cardCornerRadius="22.5dp"
+            app:cardElevation="0dp"
+            android:layout_below="@+id/lblVLPDNumber"
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:id="@+id/ivScan"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="@drawable/fullscreen_img" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvScan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cvScan"
+            android:layout_centerHorizontal="true"
+            android:text="@string/scanbarcode"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+
+            android:textStyle="normal"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/lblScannedItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvScan"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/tvBoxCount"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/lblScannedItem"
+            android:layout_marginTop="20dp"
+            android:text="@string/box_count"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/lblBoxCount"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lblScannedItem"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@+id/tvBoxCount"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:textColor="@color/colorAccent">
+        </TextView>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/txtInputLayoutQty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tvBoxCount"
+            android:layout_marginTop="10dp"
+            >
+
+            <com.inventrax.athome_multiwh.util.CustomEditText
+                android:id="@+id/etQty"
+                style="@style/editTextStyleSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/qty"
+                android:inputType="numberDecimal"
+                android:maxLength="8"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="55dp"
+            android:background="@drawable/button_shape"
+            android:elevation="30dp"
+            android:text="@string/submit"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true" />
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/btnSubmit"
+            android:background="@drawable/button_shape"
+            android:text="@string/clear"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/btnExport"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignTop="@+id/btnSubmit"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/button_shape"
+            android:text="@string/export"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+
+
+        <Button
+            android:id="@+id/btnCloseTwo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/button_close_shape"
+            android:foreground="@drawable/button_cross_close"
+            android:foregroundGravity="center"
+            android:text="@string/putaway"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
