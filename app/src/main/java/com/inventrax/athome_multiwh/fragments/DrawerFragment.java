@@ -22,8 +22,6 @@ import com.inventrax.athome_multiwh.R;
 import com.inventrax.athome_multiwh.adapters.ExpandableListAdapter;
 import com.inventrax.athome_multiwh.fragments.HH.BoxLoadingFragmentHH;
 import com.inventrax.athome_multiwh.fragments.HH.CycleCountFragmentHH;
-import com.inventrax.athome_multiwh.fragments.HU.ECOMLoadingFragment;
-import com.inventrax.athome_multiwh.fragments.HU.EcomBulkPackingFragment;
 import com.inventrax.athome_multiwh.fragments.HH.ECOM.EcomPackingFragment;
 import com.inventrax.athome_multiwh.fragments.HH.ECOM.EcomPickFragment;
 import com.inventrax.athome_multiwh.fragments.HH.ECOM.EcomPickOnDemandFragment;
@@ -36,6 +34,8 @@ import com.inventrax.athome_multiwh.fragments.HH.SkuToSkuFragmentHH;
 import com.inventrax.athome_multiwh.fragments.HH.SorterPickFragmentHH;
 import com.inventrax.athome_multiwh.fragments.HU.CaseNoMapping;
 import com.inventrax.athome_multiwh.fragments.HU.CycleCountFragmentHU;
+import com.inventrax.athome_multiwh.fragments.HU.ECOMLoadingFragment;
+import com.inventrax.athome_multiwh.fragments.HU.EcomBulkPackingFragment;
 import com.inventrax.athome_multiwh.fragments.HU.EcomMarketPlacePackingFragment;
 import com.inventrax.athome_multiwh.fragments.HU.MapPalletDockLoc;
 import com.inventrax.athome_multiwh.fragments.HU.MattressesPrintFragmentHU;
@@ -46,6 +46,11 @@ import com.inventrax.athome_multiwh.fragments.HU.ReceiveFromSiteFragmentHU;
 import com.inventrax.athome_multiwh.fragments.HU.SLocToSLocFragment;
 import com.inventrax.athome_multiwh.fragments.HU.SkuToSkuFragment;
 import com.inventrax.athome_multiwh.fragments.HU.VLPDLoadingFragment;
+import com.inventrax.athome_multiwh.fragments.NonRSN.NonRSNBinToBinFragment;
+import com.inventrax.athome_multiwh.fragments.NonRSN.NonRSNSLOCtoSLOCFragment;
+import com.inventrax.athome_multiwh.fragments.NonRSN.VLPDLoadingNonRSNFragment;
+import com.inventrax.athome_multiwh.fragments.NonRSN.VLPDPickingNonRSNFragment;
+import com.inventrax.athome_multiwh.fragments.NonRSN.NonRSNSKUtoSKUFragment;
 import com.inventrax.athome_multiwh.fragments.StockTake.StockTakeFragment;
 import com.inventrax.athome_multiwh.model.MenuModel;
 import com.inventrax.athome_multiwh.model.NavDrawerItem;
@@ -78,7 +83,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
     private IntentFilter mIntentFilter;
 
     private String userName;
-    private String division, menuLink;
+    private String division, menuLink, rsnType = "";
     SharedPreferences sp;
 
 
@@ -118,6 +123,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
             sp = getContext().getSharedPreferences("LoginActivity", Context.MODE_PRIVATE);
             userName = sp.getString("UserName", "");   // Getting User name and division from Login
             division = sp.getString("division", "");
+            rsnType = sp.getString("rsnType", "");
 
             mIntentFilter = new IntentFilter();
             mIntentFilter.addAction("com.example.broadcast.counter");
@@ -136,6 +142,13 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
                 prepareMenuDataHH();         //HH menu items
             } else if (division.equals("Stock take")) {
                 preparemenuStocktake();
+            }
+
+            if (rsnType.equalsIgnoreCase("NON-RSN")) {
+
+                prepareMenuDataNONRSNTYPE();
+            } else {
+                prepareMenuDataHU();
             }
 
             // To add menu items
@@ -158,6 +171,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
     // HU menu
     private void prepareMenuDataHU() {
 
+        headerList = new ArrayList<>();
+        childList = new HashMap<>();
         // if child is not there for a header, then add "null" in place of childModeList
 
         MenuModel menuModel = new MenuModel("Receipts", true, true, "Receipts");
@@ -168,8 +183,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         MenuModel childModel = new MenuModel("Goods-In", false, false, "Goods-In");
         childModelsList.add(childModel);
 
-        /*childModel = new MenuModel("Receive from Site", false, false, "Receive from Site");
-        childModelsList.add(childModel);*/
+        childModel = new MenuModel("Receive from Site", false, false, "Receive from Site");
+        childModelsList.add(childModel);
 
         childModel = new MenuModel("Putaway", false, false, "Putaway");
         childModelsList.add(childModel);
@@ -352,6 +367,66 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+
+    private void prepareMenuDataNONRSNTYPE() {
+
+        headerList = new ArrayList<>();
+        childList = new HashMap<>();
+
+        // if child is not there for a header, then add "null" in place of childModeList
+
+        MenuModel menuModel = new MenuModel("Receipts", true, true, "Receipts");
+        headerList.add(menuModel);
+
+        List<MenuModel> childModelsList = new ArrayList<>();
+
+        MenuModel childModel = new MenuModel("Goods-In", false, false, "Goods-In");
+        childModelsList.add(childModel);
+
+
+        if (menuModel.hasChildren) {
+            childList.put(menuModel, childModelsList);
+        }
+
+        menuModel = new MenuModel("Dispatches", true, true, "Dispatches");
+        headerList.add(menuModel);
+
+        childModelsList = new ArrayList<>();
+        childModel = new MenuModel("VLPD Picking", false, false, "VLPD Picking");
+        childModelsList.add(childModel);
+
+        childModel = new MenuModel("Loading", false, false, "Group Loading");
+        childModelsList.add(childModel);
+
+
+        if (menuModel.hasChildren) {
+            childList.put(menuModel, childModelsList);
+        }
+
+
+        childModelsList = new ArrayList<>();
+        menuModel = new MenuModel("Transfers", true, true, "Transfers");
+        headerList.add(menuModel);
+
+
+        childModel = new MenuModel("Bin to Bin", false, false, "Bin to Bin NonRSN");
+        childModelsList.add(childModel);
+
+        childModel = new MenuModel("SKU to SKU", false, false, "SKU to SKU NonRSN");
+        childModelsList.add(childModel);
+
+        childModel = new MenuModel("Sloc to Sloc", false, false, "Loc to Loc NonRSN");
+        childModelsList.add(childModel);
+
+
+        if (menuModel.hasChildren) {
+            childList.put(menuModel, childModelsList);
+        }
+
+
+    }
+
+
     private void populateExpandableList() {
 
         expandableListAdapter = new ExpandableListAdapter(getContext(), headerList, childList);
@@ -480,9 +555,32 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
                     FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new ECOMLoadingFragment());
                     break;
 
+                // NON RSN
+                case "VLPD Picking":
+                    FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new VLPDPickingNonRSNFragment());
+                    break;
+
+                case "Group Loading":
+                    FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new VLPDLoadingNonRSNFragment());
+                    break;
+
+                case "SKU to SKU NonRSN":
+                    FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new NonRSNSKUtoSKUFragment());
+                    break;
+
+                case "Loc to Loc NonRSN":
+                    FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new NonRSNSLOCtoSLOCFragment());
+                    break;
+
+                case "Bin to Bin NonRSN":
+                    FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new NonRSNBinToBinFragment());
+                    break;
+
+
+
 
             }
-        } else {
+        } else if (division.equals("HH")) {
             switch (menuLink) {                                   // HH menu item navigation clicks
 
                 case "Goods-In":
@@ -551,8 +649,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
 
 
             }
-        }
 
+        }
     }
 
 

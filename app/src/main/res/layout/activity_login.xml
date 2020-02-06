@@ -16,6 +16,30 @@
         android:layout_alignParentTop="true"
         android:orientation="horizontal">
 
+
+        <TextView
+            android:id="@+id/tvType"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/spinnerSelectDivision"
+            android:layout_marginTop="14dp"
+            android:layout_below="@+id/tvSelectDivision"
+            android:text="RSN Type"
+            android:layout_toLeftOf="@+id/spinnerSelectDivision">
+
+        </TextView>
+
+        <com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner
+            android:id="@+id/spinnerType"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/spinnerSelectDivision">
+
+        </com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner>
+
         <TextView
             android:id="@+id/tvSelectDivision"
             style="@style/textViewStyle"
@@ -45,7 +69,7 @@
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/athome" />
 
     </RelativeLayout>

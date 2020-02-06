@@ -80,170 +80,175 @@ public class ItemInfoDTO implements Serializable {
     private String pendingQuantity;
     @SerializedName("PendingQtySpecified")
     private String pendingQtySpecified;
-    public  ItemInfoDTO()
-    {
+    @SerializedName("PickedQuantity")
+    private String PickedQuantity;
+    @SerializedName("SiteCode")
+    private String SiteCode;
+    @SerializedName("Result")
+    private String result;
+
+
+    public ItemInfoDTO() {
 
     }
 
 
-
-    public ItemInfoDTO(Set<? extends Map.Entry<?, ?>> entries)
-    {
-        for(Map.Entry<?, ?> entry : entries) {
+    public ItemInfoDTO(Set<? extends Map.Entry<?, ?>> entries) {
+        for (Map.Entry<?, ?> entry : entries) {
 
             switch (entry.getKey().toString()) {
 
                 case "VlpdAssgnmentId":
-                    if(entry.getValue()!=null) {
+                    if (entry.getValue() != null) {
                         this.setVlpdAssgnmentId(entry.getValue().toString());
                     }
                     break;
                 case "MaterialMasterId":
-                    if(entry.getValue()!=null) {
+                    if (entry.getValue() != null) {
                         this.setMaterialMasterId(entry.getValue().toString());
                     }
                     break;
                 case "Mcode":
-                    if(entry.getValue()!=null) {
+                    if (entry.getValue() != null) {
                         this.setMcode(entry.getValue().toString());
                     }
                     break;
                 case "Description":
-                    if(entry.getValue()!=null) {
+                    if (entry.getValue() != null) {
                         this.setDescription(entry.getValue().toString());
                     }
                     break;
                 case "Location":
-                    if(entry.getValue()!=null) {
+                    if (entry.getValue() != null) {
                         this.setLocation(entry.getValue().toString());
                     }
                     break;
                 case "LocationId":
-                    if(entry.getValue()!=null) {
+                    if (entry.getValue() != null) {
                         this.setLocationId(entry.getValue().toString());
                     }
                     break;
                 case "BatchNumber":
-                    if(entry.getValue()!=null) {
+                    if (entry.getValue() != null) {
                         this.setBatchNumber(entry.getValue().toString());
                     }
                     break;
                 case "MfgDate":
-                    if(entry.getValue()!=null) {
+                    if (entry.getValue() != null) {
                         this.setMfgDate(entry.getValue().toString());
                     }
                     break;
 
-                case   "ExpDate":
-                    if(entry.getValue()!=null) {
+                case "ExpDate":
+                    if (entry.getValue() != null) {
                         this.setExpDate(entry.getValue().toString());
                     }
                     break;
-                case   "HuSize":
-                    if(entry.getValue()!=null) {
+                case "HuSize":
+                    if (entry.getValue() != null) {
                         this.setHuSize(entry.getValue().toString());
                     }
                     break;
-                case   "HuNo":
-                    if(entry.getValue()!=null) {
+                case "HuNo":
+                    if (entry.getValue() != null) {
                         this.setHuNo(entry.getValue().toString());
                     }
                     break;
-                case   "RSN":
-                    if(entry.getValue()!=null) {
+                case "RSN":
+                    if (entry.getValue() != null) {
                         this.setRSN(entry.getValue().toString());
                     }
                     break;
-                case   "ReqQuantity":
-                    if(entry.getValue()!=null) {
+                case "ReqQuantity":
+                    if (entry.getValue() != null) {
                         this.setReqQuantity(entry.getValue().toString());
                     }
                     break;
-                case   "AvlQuantity":
-                    if(entry.getValue()!=null) {
+                case "AvlQuantity":
+                    if (entry.getValue() != null) {
                         this.setAvlQuantity(entry.getValue().toString());
                     }
                     break;
-                case   "UserScannedRSN":
-                    if(entry.getValue()!=null) {
+                case "UserScannedRSN":
+                    if (entry.getValue() != null) {
                         this.setUserScannedRSN(entry.getValue().toString());
                     }
                     break;
 
 
-                case   "UserRequestedQty":
-                    if(entry.getValue()!=null) {
+                case "UserRequestedQty":
+                    if (entry.getValue() != null) {
                         this.setUserRequestedQty(entry.getValue().toString());
                     }
                     break;
-                case   "EAN":
-                    if(entry.getValue()!=null) {
+                case "EAN":
+                    if (entry.getValue() != null) {
                         this.setEAN(entry.getValue().toString());
                     }
                     break;
-                case   "PalletNumber":
-                    if(entry.getValue()!=null) {
+                case "PalletNumber":
+                    if (entry.getValue() != null) {
                         this.setPalletNumber(entry.getValue().toString());
                     }
                     break;
-                case   "RequestType":
-                    if(entry.getValue()!=null) {
+                case "RequestType":
+                    if (entry.getValue() != null) {
                         this.setRequestType(entry.getValue().toString());
                     }
                     break;
-                case   "SkipReason":
-                    if(entry.getValue()!=null) {
+                case "SkipReason":
+                    if (entry.getValue() != null) {
                         this.setSkipReason(entry.getValue().toString());
                     }
                     break;
-                case   "Remarks":
-                    if(entry.getValue()!=null) {
+                case "Remarks":
+                    if (entry.getValue() != null) {
                         this.setRemarks(entry.getValue().toString());
                     }
-                case   "ClientId":
-                    if(entry.getValue()!=null) {
+                case "ClientId":
+                    if (entry.getValue() != null) {
                         this.setClientId(entry.getValue().toString());
                     }
                     break;
-                case   "Dock":
-                    if(entry.getValue()!=null) {
+                case "Dock":
+                    if (entry.getValue() != null) {
                         this.setDock(entry.getValue().toString());
                     }
                     break;
-                case   "RefDoc":
-                    if(entry.getValue()!=null) {
+                case "RefDoc":
+                    if (entry.getValue() != null) {
                         this.setRefDoc(entry.getValue().toString());
                     }
-                case   "VlpdTypeId":
-                    if(entry.getValue()!=null) {
+                case "VlpdTypeId":
+                    if (entry.getValue() != null) {
                         this.setVlpdTypeId(entry.getValue().toString());
                     }
                     break;
 
-                case   "SLocID":
-                    if(entry.getValue()!=null) {
+                case "SLocID":
+                    if (entry.getValue() != null) {
                         this.setsLocID(entry.getValue().toString());
                     }
                     break;
 
-                case   "Item_SerialNumber":
-                    if(entry.getValue()!=null) {
+                case "Item_SerialNumber":
+                    if (entry.getValue() != null) {
                         this.setItem_SerialNumber(entry.getValue().toString());
                     }
                     break;
-                case   "AvlQuantitySpecified":
-                    if(entry.getValue()!=null) {
+                case "AvlQuantitySpecified":
+                    if (entry.getValue() != null) {
                         this.setAvlQuantitySpecified(Boolean.parseBoolean(entry.getValue().toString()));
                     }
                     break;
 
-                case   "HuNoSpecified":
-                    if(entry.getValue()!=null) {
+                case "HuNoSpecified":
+                    if (entry.getValue() != null) {
                         this.setHuNoSpecified(Boolean.parseBoolean(entry.getValue().toString()));
                     }
                     break;
-                case   "HuSizeSpecified":
-                    if(entry.getValue()!=null) {
+                case "HuSizeSpecified":
+                    if (entry.getValue() != null) {
                         this.setHuNoSpecified(Boolean.parseBoolean(entry.getValue().toString()));
                     }
                     break;
@@ -270,15 +275,27 @@ public class ItemInfoDTO implements Serializable {
                         this.setUserRequestedQtySpecified(Boolean.parseBoolean(entry.getValue().toString()));
                     }
                     break;
-                case   "PendingQuantity":
-                if(entry.getValue()!=null) {
-                    this.setPendingQuantity(entry.getValue().toString());
-                }
-                break;
+                case "PendingQuantity":
+                    if (entry.getValue() != null) {
+                        this.setPendingQuantity(entry.getValue().toString());
+                    }
+                    break;
 
-                case   "PendingQtySpecified":
-                    if(entry.getValue()!=null) {
+                case "PendingQtySpecified":
+                    if (entry.getValue() != null) {
                         this.setPendingQtySpecified(entry.getValue().toString());
+                    }
+                    break;
+
+                case "PickedQuantity":
+                    if (entry.getValue() != null) {
+                        this.setPickedQuantity(entry.getValue().toString());
+                    }
+                    break;
+
+                case "SiteCode":
+                    if (entry.getValue() != null) {
+                        this.setSiteCode(entry.getValue().toString());
                     }
                     break;
 
@@ -399,7 +416,6 @@ public class ItemInfoDTO implements Serializable {
     public void setRSN(String RSN) {
         this.RSN = RSN;
     }
-
 
 
     public String getUserScannedRSN() {
@@ -577,5 +593,29 @@ public class ItemInfoDTO implements Serializable {
 
     public void setUserRequestedQty(String userRequestedQty) {
         this.userRequestedQty = userRequestedQty;
+    }
+
+    public String getPickedQuantity() {
+        return PickedQuantity;
+    }
+
+    public void setPickedQuantity(String pickedQuantity) {
+        PickedQuantity = pickedQuantity;
+    }
+
+    public String getSiteCode() {
+        return SiteCode;
+    }
+
+    public void setSiteCode(String siteCode) {
+        SiteCode = siteCode;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 }

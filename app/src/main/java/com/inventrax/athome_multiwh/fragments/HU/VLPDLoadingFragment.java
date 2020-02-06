@@ -92,8 +92,10 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
     private AidcManager manager;
     SoundUtils sound;
     private ExceptionLoggerUtils exceptionLoggerUtils;
-    private String materialType = null;
+    private String materialType = "", rsnType  = "";
     private ErrorMessages errorMessages;
+
+    SharedPreferences sp;
 
     private final BroadcastReceiver myDataReceiver = new BroadcastReceiver() {
         @Override
@@ -122,6 +124,10 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
 
         rlVLPDSelect = (RelativeLayout) rootView.findViewById(R.id.rlVLPDSelect);
         rlVLPDLoading = (RelativeLayout) rootView.findViewById(R.id.rlVLPDLoading);
+
+        sp = getContext().getSharedPreferences("LoginActivity", Context.MODE_PRIVATE);
+
+        rsnType = sp.getString("rsnType", "");
 
         lblVLPDNumber = (TextView) rootView.findViewById(R.id.lblVLPDNumber);
         lblScannedItem = (TextView) rootView.findViewById(R.id.lblScannedItem);
@@ -378,7 +384,7 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
                 rlVLPDLoading.setVisibility(View.VISIBLE);
 
                 if(!lblScannedItem.getText().toString().isEmpty()){
-                    HandleRSNScan();
+                    ConfirmVLPDLoading();
                 }else {
                     common.showUserDefinedAlertType(errorMessages.EMC_0046,getActivity(),getContext(),"Error");
                 }
@@ -592,13 +598,13 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
                 if (scannedData.split("/").length == 4 && scannedData.split("/")[0].length() == 10) {
                     etQty.setText("0");
                     lblScannedItem.setText(scannedData);
-                    HandleRSNScan();
+                    ConfirmVLPDLoading();
                 } else if (scanValidator.IsRSNScanned(scannedData))
                 //else if (scannedData.Length == 17 && scannedData.Substring(0, 1) == "A")
                 {
                     etQty.setText("0");
                     lblScannedItem.setText(scannedData);
-                    HandleRSNScan();
+                    ConfirmVLPDLoading();
                 } else if (ScanValidator.IsMatressBundleScanned(scannedData)) {
                     lblScannedItem.setText(scannedData);
                     confirmMatressBunle(scannedData);
@@ -745,7 +751,7 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
 
     }
 
-    private void HandleRSNScan() {
+    private void ConfirmVLPDLoading() {
         try {
             WMSCoreMessage message = new WMSCoreMessage();
             message = common.SetAuthentication(EndpointConstants.VLPDDTO, getContext());

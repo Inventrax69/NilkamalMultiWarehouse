@@ -143,6 +143,7 @@
     <string name="title_activity_ecom_pendingPickOnDemand">Pending Ecom Pick On Demand</string>
     <string name="title_activity_pendingEcomPacking">Pending Ecom Packing</string>
     <string name="title_activity_pendingManualPacking">Pending Items</string>
+    <string name="title_activity_nonrsn_vlpd_Picking">VLPD Picking</string>
     <string name="update">Update</string>
     <string name="fragment_about_txt_version">Version :</string>
     <string name="fragment_about_txt_visit">Visit :</string>
@@ -277,6 +278,8 @@
     <string name="title_activity_pending_putawaylist">Pending Putaway List</string>
     <string name="title_activity_pending_loadinglist">Pending Loading List</string>
     <string name="hintCase">Case</string>
+    <string name="hintHuNo">Hu No.</string>
+    <string name="hintHuSize">Hu Size</string>
     <string name="start">Start</string>
     <string name="title_activity_pending_bintobin">Pending Bin to Bin List</string>
     <string name="scanbarcode">Scan Barcode</string>
@@ -308,4 +311,5 @@
     <string name="amazon_label_printer">Amazon Label Printer</string>
     <string name="so_num">SO Number</string>
     <string name="btnStart">Start</string>
+    <string name="select_vlpd">Select VLPD#</string>
 </resources>

@@ -9,6 +9,6 @@
 
     </item>
     <!-- you can use any color you want I used here gray color-->
-    <solid android:color="@color/white"/>
+    <solid android:color="#FFF"/>
     <corners android:radius="100dp"/>
 </shape>

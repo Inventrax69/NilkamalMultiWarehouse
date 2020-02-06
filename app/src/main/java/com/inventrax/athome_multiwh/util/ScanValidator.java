@@ -30,6 +30,15 @@ public class ScanValidator {
     }
 
 
+    public static boolean IsRTRBarcodeScanned(String scannedData)
+    {
+        if (scannedData.split("[_]").length==2 )
+            return true;
+        else
+            return false;
+    }
+
+
     public static boolean IsLocationScanned(String scannedData)
     {
         if ((scannedData.length() == 7 || scannedData.length()  == 8) && (isNumeric(scannedData.substring(0, 2))))

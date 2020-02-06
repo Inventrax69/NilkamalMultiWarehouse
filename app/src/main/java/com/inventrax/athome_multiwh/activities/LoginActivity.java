@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Adapt
     private Button btnLogin, btnClear;
     private CheckBox chkRememberPassword;
     private TextView txtVersion, txtReleaseDate;
-    private SearchableSpinner spinnerSelectDivision;
+    private SearchableSpinner spinnerSelectDivision,spinnerType;
     private ProgressDialogUtils progressDialogUtils;
     private LoginPresenter loginPresenter;
     private SharedPreferencesUtils sharedPreferencesUtils;
@@ -87,8 +87,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Adapt
     private ExceptionLoggerUtils exceptionLoggerUtils;
     private ErrorMessages errorMessages;
     RestService restService;
-    private String division = "";
+    private String division = "", rsnType = "";
     private ArrayList<String> listDivision;
+    private ArrayList<String> listType;
 
 
     public static final int MULTIPLE_PERMISSIONS = 10;
@@ -136,16 +137,37 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Adapt
             txtReleaseDate.setText("Release Date:" + " " + "16-12-2019");
 
             spinnerSelectDivision = (SearchableSpinner) findViewById(R.id.spinnerSelectDivision);
+            spinnerType = (SearchableSpinner) findViewById(R.id.spinnerType);
             spinnerSelectDivision.setOnItemSelectedListener(this);
 
+            spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    rsnType = spinnerType.getSelectedItem().toString();
+                    sharedPreferencesUtils.savePreference("rsnType", rsnType);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
             listDivision = new ArrayList<>();
+            listDivision.add("HU");
             listDivision.add("Select");
             listDivision.add("HH");
-            listDivision.add("HU");
             listDivision.add("Stock take");
+
+            listType = new ArrayList<>();
+            listType.add("NON-RSN");
+            listType.add("RSN");
 
             ArrayAdapter listDivisionAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listDivision);
             spinnerSelectDivision.setAdapter(listDivisionAdapter);
+
+            ArrayAdapter listTypeAdp = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listType);
+            spinnerType.setAdapter(listTypeAdp);
 
             SharedPreferences sp = this.getSharedPreferences("SettingsActivity", Context.MODE_PRIVATE);
             serviceUrlString = sp.getString("url", "");

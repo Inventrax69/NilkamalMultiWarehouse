@@ -796,18 +796,21 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
             VLPDRequestDTO vlpdRequestDTO = new VLPDRequestDTO();
             vlpdRequestDTO.setUserID(userId);
             vlpdRequestDTO.setVlpdID(vlpdId);
+            vlpdRequestDTO.setIsRSN("1");
             if (vlpdItem != null) {
                 oItem = vlpdItem;
             }
             oItem.setRequestType("PICK");
+
             if (IsSkipItem) {
 
                 oItem.setRequestType("SKIP");
                 oItem.setSkipReason(SkipReason);
                 oItem.setUserScannedRSN(lblScannedBarcode.getText().toString());
-                lstiteminfo.add(oItem);
 
+                lstiteminfo.add(oItem);
             }
+
             vlpdRequestDTO.setPickerRequestedInfo(lstiteminfo);
             message.setEntityObject(vlpdRequestDTO);
 
@@ -1222,8 +1225,10 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
             vlpdRequestDTO.setReqQuantity(15); ///added by hemnath*/
 
             vlpdRequestDTO.setUniqueRSN(lblScannedBarcode.getText().toString());
+            vlpdRequestDTO.setIsRSN("1");
             ItemInfoDTO oIteminfo = new ItemInfoDTO();
             oIteminfo = vlpdItem;
+
             oIteminfo.setPalletNumber(etPallet.getText().toString());
             oIteminfo.setReqQuantity(lblReqQty.getText().toString());
             oIteminfo.setUserScannedRSN(lblScannedBarcode.getText().toString());

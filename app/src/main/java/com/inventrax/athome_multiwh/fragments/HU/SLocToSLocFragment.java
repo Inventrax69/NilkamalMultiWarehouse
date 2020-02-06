@@ -40,7 +40,6 @@ import com.inventrax.athome_multiwh.common.constants.EndpointConstants;
 import com.inventrax.athome_multiwh.common.constants.ErrorMessages;
 import com.inventrax.athome_multiwh.fragments.HomeFragment;
 import com.inventrax.athome_multiwh.interfaces.ApiInterface;
-import com.inventrax.athome_multiwh.pojos.ExecutionResponseDTO;
 import com.inventrax.athome_multiwh.pojos.InternalTransferDTO;
 import com.inventrax.athome_multiwh.pojos.ItemInfoDTO;
 import com.inventrax.athome_multiwh.pojos.VLPDRequestDTO;
@@ -772,175 +771,7 @@ public class SLocToSLocFragment extends Fragment implements View.OnClickListener
     }
 
 
-    public void getItemToPick() {
 
-        try {
-            List<ItemInfoDTO> lstiteminfo = new ArrayList<>();
-            ItemInfoDTO oItem = new ItemInfoDTO();
-            WMSCoreMessage message = new WMSCoreMessage();
-            message = common.SetAuthentication(EndpointConstants.VLPDRequestDTO, getContext());
-            VLPDRequestDTO vlpdRequestDTO = new VLPDRequestDTO();
-            vlpdRequestDTO.setUserID(userId);
-            vlpdRequestDTO.setVlpdID(vlpdId);
-            if (vlpdItem != null) {
-                oItem = vlpdItem;
-            }
-            oItem.setRequestType("PICK");
-            if (IsSkipItem) {
-
-                oItem.setRequestType("SKIP");
-                oItem.setSkipReason(SkipReason);
-                oItem.setUserScannedRSN(lblScannedBarcode.getText().toString());
-                lstiteminfo.add(oItem);
-
-            }
-            vlpdRequestDTO.setPickerRequestedInfo(lstiteminfo);
-            message.setEntityObject(vlpdRequestDTO);
-
-            Call<String> call = null;
-            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
-
-            try {
-                //Checking for Internet Connectivity
-                // if (NetworkUtils.isInternetAvailable()) {
-                // Calling the Interface method
-                call = apiService.GetItemtoPick(message);
-                ProgressDialogUtils.showProgressDialog("Please Wait");
-                // } else {
-                // DialogUtils.showAlertDialog(getActivity(), "Please enable internet");
-                // return;
-                // }
-
-            } catch (Exception ex) {
-                try {
-                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetItemtoPick_01", getActivity());
-                    logException();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ProgressDialogUtils.closeProgressDialog();
-                common.showUserDefinedAlertType(errorMessages.EMC_0002, getActivity(), getContext(), "Error");
-
-            }
-            try {
-                //Getting response from the method
-                call.enqueue(new Callback<String>() {
-
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        try {
-                            core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
-
-                                if ((core.getType().toString().equals("Exception"))) {
-                                    List<LinkedTreeMap<?, ?>> _lExceptions = new ArrayList<LinkedTreeMap<?, ?>>();
-                                    _lExceptions = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
-                                    WMSExceptionMessage owmsExceptionMessage = null;
-                                    for (int i = 0; i < _lExceptions.size(); i++) {
-                                        owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-                                    }
-                                    ProgressDialogUtils.closeProgressDialog();
-                                    common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
-
-
-                            } else {
-                                core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
-
-                                List<LinkedTreeMap<?, ?>> _lVLPD = new ArrayList<LinkedTreeMap<?, ?>>();
-                                _lVLPD = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
-                                List<VLPDResponseDTO> lstDto = new ArrayList<VLPDResponseDTO>();
-                                List<String> lstVLPD = new ArrayList<>();
-                                VLPDResponseDTO dto = null;
-                                for (int i = 0; i < _lVLPD.size(); i++) {
-                                    dto = new VLPDResponseDTO(_lVLPD.get(i).entrySet());
-
-                                    lstDto.add(dto);
-                                }
-
-                                for (ItemInfoDTO oiteminfo : dto.getSuggestedItem()) {
-                                    vlpdItem = oiteminfo;
-                                }
-
-
-                                ExecutionResponseDTO executionResponseDTO = new ExecutionResponseDTO();
-                                if (dto.getPreviousPickedItemResponce() != null) {
-
-                                    if (executionResponseDTO.getMessage().equals(false)) {
-                                        if (executionResponseDTO.getStatus()) {
-                                            //btnOk.setVisibility(View.GONE);
-                                        } else {
-                                            common.showUserDefinedAlertType(executionResponseDTO.getMessage(), getActivity(), getContext(), "Error");
-
-                                        }
-                                    }
-                                }
-                                IsSkipItem = false;
-                                //vlpdItem =dto.getSuggestedItem();
-
-                                if (vlpdItem != null) {
-                                    if (vlpdItem.getMcode() != null && vlpdItem.getMcode() != "") {
-
-                                        UpDateUI(vlpdItem);
-                                        IsPicking = true;
-                                        if (isPrintWindowRequired) {
-                                            //ShowPrintPanel(OLDRSNNumber);
-                                        }
-                                    } else {
-                                        if (isPrintWindowRequired) {
-                                            // ShowPrintPanel(OLDRSNNumber);
-                                        }
-                                        if (!lblRefNo.getText().toString().isEmpty()) {
-                                            common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Error");
-                                            ClearUIElemennts();
-                                            GetAllOpenVLPDList();
-                                            return;
-                                        } else {
-                                            IsPicking = false;
-                                        }
-                                        ProgressDialogUtils.closeProgressDialog();
-                                    }
-                                }
-                            }
-
-                        } catch (Exception ex) {
-                            try {
-                                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetItemtoPick_02", getActivity());
-                                logException();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            ProgressDialogUtils.closeProgressDialog();
-                        }
-                    }
-
-                    // response object fails
-                    @Override
-                    public void onFailure(Call<String> call, Throwable throwable) {
-                        //Toast.makeText(LoginActivity.this, throwable.toString(), Toast.LENGTH_LONG).show();
-                        ProgressDialogUtils.closeProgressDialog();
-                        common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
-                    }
-                });
-            } catch (Exception ex) {
-                try {
-                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetItemtoPick_03", getActivity());
-                    logException();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ProgressDialogUtils.closeProgressDialog();
-                common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
-            }
-        } catch (Exception ex) {
-            try {
-                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetItemtoPick_04", getActivity());
-                logException();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ProgressDialogUtils.closeProgressDialog();
-            common.showUserDefinedAlertType(errorMessages.EMC_0003, getActivity(), getContext(), "Error");
-        }
-    }
 
     // To get VLPD Id
     private void GetAllOpenVLPDList() {
@@ -953,6 +784,7 @@ public class SLocToSLocFragment extends Fragment implements View.OnClickListener
             VLPDRequestDTO vlpdRequestDTO = new VLPDRequestDTO();
             vlpdRequestDTO.setUserID(userId);
             vlpdRequestDTO.setType("4");
+            vlpdRequestDTO.setIsRSN("1");
             if (vlpdItem != null) {
                 oItem = vlpdItem;
             }
@@ -1041,7 +873,7 @@ public class SLocToSLocFragment extends Fragment implements View.OnClickListener
 
                                                 btnPick.setTextColor(getResources().getColor(R.color.black));
                                                 btnPick.setBackgroundResource(R.drawable.button_hide);
-                                                //MessageBox.Show("Success", "Message", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
+                                                // MessageBox.Show("Success", "Message", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
                                                 //  MessageBox.Show("Success");
                                             }
                                         }
@@ -1397,6 +1229,7 @@ public class SLocToSLocFragment extends Fragment implements View.OnClickListener
             VLPDRequestDTO vlpdRequestDTO = new VLPDRequestDTO();
             vlpdRequestDTO.setUserID(userId);
             vlpdRequestDTO.setVlpdID(vlpdId);
+            vlpdRequestDTO.setIsRSN("1");
             vlpdRequestDTO.setUniqueRSN(lblScannedBarcode.getText().toString());
             ItemInfoDTO oIteminfo = new ItemInfoDTO();
             oIteminfo = vlpdItem;

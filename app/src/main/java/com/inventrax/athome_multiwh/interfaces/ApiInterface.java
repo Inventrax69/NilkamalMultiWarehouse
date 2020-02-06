@@ -31,8 +31,18 @@ public interface ApiInterface {
     @POST("Inbound/ConfirmReceiptOnUniqueRSNScan")
     Call<String> ConfirmReceiptOnUniqueRSNScan(@Body WMSCoreMessage oRequest);
 
+    @POST("Inbound/GetSKUDeatilsWithSupplierInvoice")
+    Call<String> getSKUDeatilsWithSupplierInvoice(@Body WMSCoreMessage oRequest);
+
+
     @POST("Inbound/UpdateLBH")
     Call<String> UpdateLBH(@Body WMSCoreMessage oRequest);
+
+    @POST("Inbound/UpdateSKULBH")
+    Call<String> UpdateSKULBH(@Body WMSCoreMessage oRequest);
+
+    @POST("Inbound/insertSKUDeatilsWithSupplierInvoice")
+    Call<String> insertSKUDeatilsWithSupplierInvoice(@Body WMSCoreMessage oRequest);
 
     @POST("Inbound/GetPalletCurrentLocation")
     Call<String> GetPalletCurrentLocation(@Body WMSCoreMessage oRequest);
@@ -276,6 +286,45 @@ public interface ApiInterface {
 
     @POST("ECOM/PrintEcomLabelsForFurniture")
     Call<String> PrintEcomLabelsForFurniture(@Body WMSCoreMessage oRequest);
+
+    // Padmaja
+    // NON RSN VLPD PICKING
+
+    @POST("VLPD/GetVLPDsForNonRSN")
+    Call<String> GetVLPDsForNonRSN(@Body WMSCoreMessage oRequest);
+
+    @POST("VLPD/ValidateNONRSNSKUAndConfirmPicking")
+    Call<String> ValidateNONRSNSKUAndConfirmPicking(@Body WMSCoreMessage oRequest);
+
+
+    // Non RSN Loading
+    @POST("VLPD/GetNonRSNVLPDSKUList")
+    Call<String> GetNonRSNVLPDSKUList(@Body WMSCoreMessage oRequest);
+
+    @POST("VLPD/GetNonRSNOpenRefNumberList")
+    Call<String> GetNonRSNOpenRefNumberList(@Body WMSCoreMessage oRequest);
+
+    @POST("VLPD/GetNonRSNVLPDSKUPendingDetails")
+    Call<String> GetNonRSNVLPDSKUPendingDetails(@Body WMSCoreMessage oRequest);
+
+    @POST("VLPD/ConfirmNonRSNVLPDLoading")
+    Call<String> ConfirmNonRSNVLPDLoading(@Body WMSCoreMessage oRequest);
+
+
+    // Non RSN Bin to Bin
+    @POST("Transfers/GetNONRSNBinLocationSKUs")
+    Call<String> GetNONRSNBinLocationSKUs(@Body WMSCoreMessage oRequest);
+
+    @POST("Transfers/GetNONRSNBinLocationSKUDetails")
+    Call<String> GetNONRSNBinLocationSKUDetails(@Body WMSCoreMessage oRequest);
+
+    @POST("Transfers/ConfirmNonRSNBinToBinInternalTransfer")
+    Call<String> ConfirmNonRSNBinToBinInternalTransfer(@Body WMSCoreMessage oRequest);
+
+
+
+
+
 
 
 }

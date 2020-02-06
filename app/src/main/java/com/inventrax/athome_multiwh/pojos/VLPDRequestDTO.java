@@ -24,6 +24,8 @@ public class VLPDRequestDTO {
     private String uniqueRSN;
     @SerializedName("IsNew")
     private String IsNew;
+    @SerializedName("IsRSN")
+    private String IsRSN;
 
    /* @SerializedName("ReqQuantity")
     private int reqQuantity;*/
@@ -178,5 +180,13 @@ public class VLPDRequestDTO {
 
     public void setInputType(List<ItemInfoDTO> inputType) {
         this.inputType = inputType;
+    }
+
+    public String getIsRSN() {
+        return IsRSN;
+    }
+
+    public void setIsRSN(String isRSN) {
+        IsRSN = isRSN;
     }
 }
