@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Adapt
             txtReleaseDate = (TextView) findViewById(R.id.txtDate);
             txtVersion = (TextView) findViewById(R.id.txtVersionName);
             txtVersion.setText("Version:" + " " + AndroidUtils.getVersionName().toString());
-            txtReleaseDate.setText("Release Date:" + " " + "16-12-2019");
+            txtReleaseDate.setText("Release Date:" + " " + "06-02-2020");
 
             spinnerSelectDivision = (SearchableSpinner) findViewById(R.id.spinnerSelectDivision);
             spinnerType = (SearchableSpinner) findViewById(R.id.spinnerType);
@@ -154,14 +154,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Adapt
             });
 
             listDivision = new ArrayList<>();
-            listDivision.add("HU");
             listDivision.add("Select");
+            listDivision.add("HU");
             listDivision.add("HH");
             listDivision.add("Stock take");
 
             listType = new ArrayList<>();
-            listType.add("NON-RSN");
             listType.add("RSN");
+            listType.add("NON-RSN");
 
             ArrayAdapter listDivisionAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listDivision);
             spinnerSelectDivision.setAdapter(listDivisionAdapter);

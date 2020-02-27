@@ -11,7 +11,7 @@
     <RelativeLayout
         android:id="@+id/rlLogo"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="185dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="horizontal">
@@ -65,25 +65,25 @@
 
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="170dp"
-            android:layout_height="60dp"
+            android:layout_width="150dp"
+            android:layout_height="70dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/athome" />
+            android:background="@drawable/nilkamal_logo" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rlLogin"
         android:layout_width="match_parent"
-        android:layout_height="329dp"
+        android:layout_height="315dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/rlLogo"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="7dp"
         android:orientation="horizontal">
 
 
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:drawableLeft="@drawable/email_img"
             android:drawablePadding="@dimen/activity_login_padding_left"
             android:hint="@string/userHint"
