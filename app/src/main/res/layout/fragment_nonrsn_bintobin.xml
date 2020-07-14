@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:background="@color/white"
+    android:focusableInTouchMode="true">
+
+    <RelativeLayout
+        android:id="@+id/rlSelection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <android.support.v7.widget.AppCompatButton
+
+                android:id="@+id/btnLoadPallet"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/button_shape_two"
+                android:padding="8dp"
+                android:text="@string/load_pallet"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+
+            <android.support.v7.widget.AppCompatButton
+
+                android:id="@+id/btnBinMap"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_below="@+id/btnLoadPallet"
+                android:layout_centerInParent="true"
+                android:background="@drawable/button_shape_two"
+                android:padding="8dp"
+                android:text="@string/bin_mapping"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_close_shape"
+            android:elevation="30dp"
+            android:foreground="@drawable/button_cross_close"
+            android:foregroundGravity="center"
+            android:text="@string/putaway"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlNonRSNSkuList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="10">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/cvScanLocation"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        app:cardBackgroundColor="@color/locationColor"
+                        app:cardCornerRadius="22.5dp"
+                        app:cardElevation="0dp">
+
+                        <ImageView
+                            android:id="@+id/ivScanLocation"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/fullscreen_img" />
+
+
+                    </android.support.v7.widget.CardView>
+
+
+                    <TextView
+                        android:id="@+id/tvScanBarcode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scanLocation"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/cvScanPallet"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/palletColor"
+                        app:cardCornerRadius="22.5dp"
+                        app:cardElevation="0dp">
+
+                        <ImageView
+                            android:id="@+id/ivScanPallet"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/fullscreen_img" />
+
+                    </android.support.v7.widget.CardView>
+
+
+                    <TextView
+                        android:id="@+id/tvScanPallet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/cvScanPallet"
+                        android:text="@string/scanPallet"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/txtInputLayoutLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.inventrax.athome_multiwh.util.CustomEditText
+                        android:id="@+id/etLocation"
+                        style="@style/editTextStyleSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="@string/location"
+                        android:inputType="date"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/txtInputLayoutPallet"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.inventrax.athome_multiwh.util.CustomEditText
+                        android:id="@+id/etPallet"
+                        style="@style/editTextStyleSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="@string/hintPallet"
+                        android:inputType="text"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+
+            </LinearLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvItemsList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnCloseTransferSelection"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/button_close_shape"
+                    android:elevation="30dp"
+                    android:foreground="@drawable/button_cross_close"
+                    android:foregroundGravity="center"
+                    android:text="@string/putaway"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlMapToPallet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="10">
+
+            <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_above="@+id/bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="8"
+                android:orientation="vertical"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.inventrax.athome_multiwh.util.ExpandableHeightGridView
+                        android:id="@+id/listViewItems"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:horizontalSpacing="5dp"
+                        android:isScrollContainer="false"
+                        android:stretchMode="columnWidth" />
+                </LinearLayout>
+            </ScrollView>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1" />
+
+            <android.support.v7.widget.AppCompatButton
+
+                android:id="@+id/btnMapItemstoPallet"
+                android:layout_width="120dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_weight="0.9"
+                android:background="@drawable/button_shape_two"
+                android:padding="8dp"
+                android:text="@string/confirm"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnCloseMapPallet"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/button_close_shape"
+                    android:elevation="30dp"
+                    android:foreground="@drawable/button_cross_close"
+                    android:foregroundGravity="center"
+                    android:text="@string/putaway"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
