@@ -993,7 +993,7 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
         try {
             GetNewlyGeneratedRSNNumberByRSNNumber();
         } catch (Exception EX) {
-
+             //
         }
     }
 

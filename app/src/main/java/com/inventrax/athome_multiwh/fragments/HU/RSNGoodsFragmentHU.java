@@ -635,7 +635,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                             etPallet.requestFocus();
                             etPallet.setText(scannedData);
                             etLocation.requestFocus();
-
                             return;
                         } else {
                             common.showUserDefinedAlertType(errorMessages.EMC_0019, getActivity(), getContext(), "Error");
@@ -2578,7 +2577,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         etHeight.setText("");
         etWeight.setText("");
         etRSN.setText("");
-
     }
 
     public void moveStockToAuditBin() {
