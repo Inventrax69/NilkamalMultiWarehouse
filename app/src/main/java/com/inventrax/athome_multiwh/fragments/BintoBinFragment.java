@@ -486,9 +486,7 @@ public class BintoBinFragment extends Fragment implements View.OnClickListener, 
                             rlBinMapping.setVisibility(View.GONE);
                             rlSelection.setVisibility(View.GONE);
                             etOldRsn.setText(_oldRSNNumber);
-
                             GetNewlyGeneratedRSNNumberByRSNNumber();
-
                             return;
                         }
                     }
@@ -911,7 +909,6 @@ public class BintoBinFragment extends Fragment implements View.OnClickListener, 
                 }
 
                 // FOR SCAN VALIDATION OF ARTICLE BARCODE RSN/EAN
-
                 if (!ScanValidator.IsPalletScanned(scannedData) && !ScanValidator.IsLocationScanned(scannedData))
                 {
                     if (ScanValidator.IsRSNScanned(scannedData))
@@ -1188,7 +1185,6 @@ public class BintoBinFragment extends Fragment implements View.OnClickListener, 
                 if (etDestPallet.getText().toString().isEmpty()) {
                     if (ScanValidator.IsPalletScanned(scannedData)) {
                         etDestPallet.setText(scannedData);
-
                         GetPalletCurrentLocation();
                         return;
                     }else
@@ -1735,6 +1731,7 @@ public class BintoBinFragment extends Fragment implements View.OnClickListener, 
                                     cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
                                     ivScanPallet.setImageResource(R.drawable.check);
                                     if (!IsValidLocationorPallet) {
+                                        ProgressDialogUtils.closeProgressDialog();
                                         common.showUserDefinedAlertType(errorMessages.EMC_0031, getActivity(), getContext(), "Error");
                                         etSourceBin.setText("");
                                     } else {

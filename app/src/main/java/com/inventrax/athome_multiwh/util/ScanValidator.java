@@ -32,7 +32,7 @@ public class ScanValidator {
 
     public static boolean IsRTRBarcodeScanned(String scannedData)
     {
-        if (scannedData.split("[_]").length==2 )
+        if (scannedData.split("[_]").length==3 )
             return true;
         else
             return false;
@@ -54,7 +54,11 @@ public class ScanValidator {
 
     public static Boolean IsPalletScanned(String scanneddata)
     {
-        if ((scanneddata.length() == 8 &&((scanneddata.substring(0,1).equals("H"))|| (scanneddata.substring(0,1).equals("P"))))||((scanneddata.length() == 11)&&(scanneddata.substring(0,1).equalsIgnoreCase("W"))))
+        if ((scanneddata.length() == 8
+                &&((scanneddata.substring(0,1).equals("H"))
+                || (scanneddata.substring(0,1).equals("P"))))
+                ||((scanneddata.length() == 11)
+                &&(scanneddata.substring(0,1).equalsIgnoreCase("W"))))
         {
             return true;
         }

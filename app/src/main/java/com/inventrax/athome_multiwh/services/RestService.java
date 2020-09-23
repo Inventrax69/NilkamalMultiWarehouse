@@ -27,8 +27,8 @@ public class RestService {
             if (retrofit == null) {
 
                 OkHttpClient client = new OkHttpClient.Builder()
-                        .connectTimeout(100, TimeUnit.SECONDS)
-                        .readTimeout(100,TimeUnit.SECONDS).build();
+                        .connectTimeout(300, TimeUnit.SECONDS)
+                        .readTimeout(300,TimeUnit.SECONDS).build();
 
                          retrofit = new Retrofit.Builder()
                         .baseUrl(ServiceURL.getServiceUrl()).client(client)

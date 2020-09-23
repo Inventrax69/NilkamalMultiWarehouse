@@ -137,7 +137,6 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
     // Form controls
     private void loadFormControls() {
 
-
         rlPick = (RelativeLayout) rootView.findViewById(R.id.rlPick);
         rlSelectReason = (RelativeLayout) rootView.findViewById(R.id.rlSelectReason);
         rlPrint = (RelativeLayout) rootView.findViewById(R.id.rlPrint);
@@ -238,7 +237,6 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
                     cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
                     ivScanPallet.setImageResource(R.drawable.check);
                 }
-
 
             } else if (materialType.equals("HH")) {
 
@@ -530,18 +528,15 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
         rlSelectReason.setVisibility(View.GONE);
         cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
         ivScanPallet.setImageResource(R.drawable.check);
-
-
-
     }
 
     public void ClearFields() {
+
         cvScanBarcode.setCardBackgroundColor(getResources().getColor(R.color.scanColor));
         ivScanBarcode.setImageResource(R.drawable.fullscreen_img);
 
         cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
         ivScanPallet.setImageResource(R.drawable.fullscreen_img);
-
 
         etQty.setText("");
         lblScannedBarcode.setText("");
@@ -935,14 +930,11 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
                                     if (dto.getPreviousPickedItemResponce() != null) {
                                         if (dto.getPreviousPickedItemResponce().get(0).getMessage() != null) {
                                             if (dto.getPreviousPickedItemResponce().get(0).getStatus() == false) {
-
                                                 common.showUserDefinedAlertType(dto.getPreviousPickedItemResponce().get(0).getMessage(), getActivity(), getContext(), "Error");
                                                 return;
                                             } else {
 
-
                                                 btnPick.setEnabled(false);
-
                                                 btnPick.setTextColor(getResources().getColor(R.color.black));
                                                 btnPick.setBackgroundResource(R.drawable.button_hide);
                                                 //MessageBox.Show("Success", "Message", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);

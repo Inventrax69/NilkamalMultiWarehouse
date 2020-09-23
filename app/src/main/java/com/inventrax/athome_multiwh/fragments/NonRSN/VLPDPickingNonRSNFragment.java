@@ -288,7 +288,6 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
             case R.id.btnOk:
                 if (!vlpdNo.equalsIgnoreCase("")) {
                     GetVLPDID(vlpdNo);
-
                 } else {
                     common.showUserDefinedAlertType(errorMessages.EMC_084, getActivity(), getContext(), "Warning");
                 }
@@ -472,7 +471,6 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
                                 }
                                 ProgressDialogUtils.closeProgressDialog();
                                 if (_oInternalTransferDto.getStatus()) {
-
                                     goBackToNormalView();
                                     common.showUserDefinedAlertType(errorMessages.EMC_0049, getActivity(), getContext(), "Success");
                                     return;
@@ -530,29 +528,25 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
         for (VlpdDto oVlpdDto : lstVlpdDto) {
             if (oVlpdDto.getvLPDNumber().equals(vlpdNo)) {
                 vlpdId = oVlpdDto.getiD();
-
                 getItemToPick();
-
-
             }
         }
 
     }
 
     public void ClearFields() {
+
         cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.locationColor));
         ivScanLocation.setImageResource(R.drawable.fullscreen_img);
 
         cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
         ivScanPallet.setImageResource(R.drawable.fullscreen_img);
 
-
         etQty.setText("");
         lblScannedBarcode.setText("");
         etPallet.setText("");
 
     }
-
 
     public void updateSkipReason() {
 
@@ -568,9 +562,7 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
                 getItemToPick();
 
             } else {
-
                 common.showUserDefinedAlertType(errorMessages.EMC_0015, getActivity(), getActivity(), "Error");
-
             }
         } else {
             common.showUserDefinedAlertType(errorMessages.EMC_0041, getActivity(), getContext(), "Error");
@@ -641,7 +633,6 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
         }
 
     }
-
 
     private void getVLPDsForNonRSN() {
 
@@ -751,7 +742,6 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
 
     }
 
-
     public void getItemToPick() {
 
         try {
@@ -775,8 +765,8 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
                 oItem.setUserRequestedQty(etQty.getText().toString());
                 oItem.setMcode(lblSKU.getText().toString());
                 oItem.setUserScannedRSN(lblScannedBarcode.getText().toString());
-
                 lstiteminfo.add(oItem);
+
             }
 
             vlpdRequestDTO.setPickerRequestedInfo(lstiteminfo);
@@ -929,7 +919,6 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
         }
     }
 
-
     private void UpDateUI(ItemInfoDTO suggestedItem) {
         rlPick.setVisibility(View.VISIBLE);
         rlSelectReason.setVisibility(View.GONE);
@@ -971,7 +960,6 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
             return;
         }
     }
-
 
     private void ClearUIElemennts() {
         lblSKU.setText("");
@@ -1347,7 +1335,6 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
         }
     }
 
-
     //Assigning scanned value to the respective fields
     public void ProcessScannedinfo(String scannedData) {
 
@@ -1368,19 +1355,19 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
                         ivScanLocation.setImageResource(R.drawable.invalid_cross);
                         common.showUserDefinedAlertType(errorMessages.EMC_0007, getActivity(), getActivity(), "Error");
                     }
-                } else if (ScanValidator.IsPalletScanned(scannedData)) {
-                    /*if (lblSKU.getText().toString().isEmpty()) {
+                } /*else if (ScanValidator.IsPalletScanned(scannedData)) {
+                    *//*if (lblSKU.getText().toString().isEmpty()) {
                         clearFields();
                         common.showUserDefinedAlertType(errorMessages.EMC_039, getActivity(), getContext(), "Error");
                         return;
-                    }*/
+                    }*//*
                     etPallet.setText(scannedData);
 
                     cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
                     ivScanPallet.setImageResource(R.drawable.check);
 
                     return;
-                } else {
+                } */else {
                     common.showUserDefinedAlertType(errorMessages.EMC_0045, getActivity(), getContext(), "Error");
                     return;
                 }
@@ -1598,9 +1585,7 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
         }
     }
 
-
     @Override
-
     public void onPause() {
         super.onPause();
         if (barcodeReader != null) {

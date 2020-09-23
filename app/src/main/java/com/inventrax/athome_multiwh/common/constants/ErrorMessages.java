@@ -22,6 +22,8 @@ public class ErrorMessages {
 
     public String EMC_0008 = "Update LBH";
 
+    public String EMC_0008_01 = "Update LBH in web";
+
     public String EMC_0009 = "Please scan valid RSN.";
 
     public String EMC_0010 = "Please enter the length.";

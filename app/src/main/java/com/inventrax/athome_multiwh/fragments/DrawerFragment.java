@@ -46,6 +46,7 @@ import com.inventrax.athome_multiwh.fragments.HU.ReceiveFromSiteFragmentHU;
 import com.inventrax.athome_multiwh.fragments.HU.SLocToSLocFragment;
 import com.inventrax.athome_multiwh.fragments.HU.SkuToSkuFragment;
 import com.inventrax.athome_multiwh.fragments.HU.VLPDLoadingFragment;
+import com.inventrax.athome_multiwh.fragments.NonRSN.NewVLPDLoadingNonRSNFragment;
 import com.inventrax.athome_multiwh.fragments.NonRSN.NonRSNBinToBinFragment;
 import com.inventrax.athome_multiwh.fragments.NonRSN.NonRSNSLOCtoSLOCFragment;
 import com.inventrax.athome_multiwh.fragments.NonRSN.VLPDLoadingNonRSNFragment;
@@ -65,7 +66,6 @@ import java.util.List;
 public class DrawerFragment extends Fragment implements View.OnClickListener {
 
     private static final String classCode = "API_FRAG_NAVIGATION DRAWER";
-
     private static String TAG = DrawerFragment.class.getSimpleName();
     private RecyclerView mRecyclerView;
     private Context mContext;
@@ -75,18 +75,12 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
     private FragmentDrawerListener drawerListener;
     private View layout;
     private TextView txtLoginUser, tvCycleCount;
-
     public DrawerLayout drawerLayout;
-
     private AppCompatActivity appCompatActivity;
-
     private IntentFilter mIntentFilter;
-
     private String userName;
     private String division, menuLink, rsnType = "";
     SharedPreferences sp;
-
-
     ExpandableListAdapter expandableListAdapter;
     ExpandableListView expandableListView;
     List<MenuModel> headerList = new ArrayList<>();
@@ -111,7 +105,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
 
         loadFormControls();
 
-
         return layout;
     }
 
@@ -119,11 +112,10 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
 
         try {
 
-
             sp = getContext().getSharedPreferences("LoginActivity", Context.MODE_PRIVATE);
             userName = sp.getString("UserName", "");   // Getting User name and division from Login
             division = sp.getString("division", "");
-            rsnType = sp.getString("rsnType", "");
+            //rsnType = sp.getString("rsnType", "");
 
             mIntentFilter = new IntentFilter();
             mIntentFilter.addAction("com.example.broadcast.counter");
@@ -144,12 +136,11 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
                 preparemenuStocktake();
             }
 
-            if (rsnType.equalsIgnoreCase("NON-RSN")) {
-
+/*            if (rsnType.equalsIgnoreCase("NON-RSN")) {
                 prepareMenuDataNONRSNTYPE();
             } else {
                 prepareMenuDataHU();
-            }
+            }*/
 
             // To add menu items
             populateExpandableList();
@@ -181,6 +172,9 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         List<MenuModel> childModelsList = new ArrayList<>();
 
         MenuModel childModel = new MenuModel("Goods-In", false, false, "Goods-In");
+        childModelsList.add(childModel);
+
+        childModel = new MenuModel("NonRSN Goods-In", false, false, "Goods-In");
         childModelsList.add(childModel);
 
         childModel = new MenuModel("Receive from Site", false, false, "Receive from Site");
@@ -220,6 +214,12 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         childModel = new MenuModel("VLPD Loading", false, false, "VLPD Loading");
         childModelsList.add(childModel);
 
+        childModel = new MenuModel("NonRSN Picking", false, false, "VLPD Picking");
+        childModelsList.add(childModel);
+
+        childModel = new MenuModel("NonRSN Loading", false, false, "Group Loading");
+        childModelsList.add(childModel);
+
 
         if (menuModel.hasChildren) {
             childList.put(menuModel, childModelsList);
@@ -255,6 +255,15 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         childModelsList.add(childModel);
 
         childModel = new MenuModel("Sloc to Sloc", false, false, "Loc to Loc");
+        childModelsList.add(childModel);
+
+        childModel = new MenuModel("NonRSN Bin to Bin", false, false, "Bin to Bin NonRSN");
+        childModelsList.add(childModel);
+
+        childModel = new MenuModel("NonRSN SKU to SKU", false, false, "SKU to SKU NonRSN");
+        childModelsList.add(childModel);
+
+        childModel = new MenuModel("NonRSN Sloc to Sloc", false, false, "Loc to Loc NonRSN");
         childModelsList.add(childModel);
 
         if (menuModel.hasChildren) {
@@ -367,7 +376,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
     private void prepareMenuDataNONRSNTYPE() {
 
         headerList = new ArrayList<>();
@@ -473,7 +481,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         drawer.closeDrawer(GravityCompat.START);
     }
 
-
     public void openFragment() {
 
         if (division.equalsIgnoreCase("Stock take")) {
@@ -561,7 +568,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
                     break;
 
                 case "Group Loading":
-                    FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new VLPDLoadingNonRSNFragment());
+                    FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new NewVLPDLoadingNonRSNFragment());
                     break;
 
                 case "SKU to SKU NonRSN":
@@ -575,9 +582,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
                 case "Bin to Bin NonRSN":
                     FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new NonRSNBinToBinFragment());
                     break;
-
-
-
 
             }
         } else if (division.equals("HH")) {

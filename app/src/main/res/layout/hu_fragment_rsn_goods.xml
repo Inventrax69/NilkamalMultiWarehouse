@@ -275,8 +275,27 @@
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/txtInputLayoutSLoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.inventrax.athome_multiwh.util.CustomEditText
+                        android:id="@+id/etSloc"
+                        style="@style/editTextStyleSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hintSLoc"
+                        android:enabled="false"
+                        android:inputType="text"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -385,6 +404,7 @@
                         android:inputType="numberDecimal"
                         android:maxLength="8"
                         android:singleLine="true" />
+
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
@@ -430,6 +450,7 @@
                         android:inputType="numberDecimal"
                         android:maxLength="8"
                         android:singleLine="true" />
+
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -489,6 +510,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hintCase"
+                        android:enabled="false"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -528,12 +550,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/hintHuNo"
+                            android:enabled="false"
                             android:singleLine="true" />
+
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/txtInputLayoutQunatity"
                         android:layout_width="0dp"
+                        android:visibility="invisible"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 

@@ -34,7 +34,6 @@ public interface ApiInterface {
     @POST("Inbound/GetSKUDeatilsWithSupplierInvoice")
     Call<String> getSKUDeatilsWithSupplierInvoice(@Body WMSCoreMessage oRequest);
 
-
     @POST("Inbound/UpdateLBH")
     Call<String> UpdateLBH(@Body WMSCoreMessage oRequest);
 
@@ -146,14 +145,11 @@ public interface ApiInterface {
     @POST("VLPD/ValidateBarcodeAndConfirmPicking")
     Call<String> ValidateBarcodeAndConfirmPicking(@Body WMSCoreMessage oRequest);
 
-
     @POST("Outbound/GetOpenOBDListForECOMPacking")
     Call<String> GetOpenOBDListForECOMPacking(@Body WMSCoreMessage oRequest);
 
-
     @POST("Outbound/CaptureOBDBoxPicking")
     Call<String> CaptureOBDBoxPicking(@Body WMSCoreMessage oRequest);
-
 
     @POST("VLPD/GetOpenVLPDListByPriority")
     Call<String> GetOpenVLPDListByPriority(@Body WMSCoreMessage oRequest);
@@ -242,7 +238,6 @@ public interface ApiInterface {
     @POST("CycleCount/CloseBinForHU")
     Call<String> CloseBinForHU(@Body WMSCoreMessage oRequest);
 
-
     @POST("CycleCount/ClearBin")
     Call<String> ClearBin(@Body WMSCoreMessage oRequest);
 
@@ -255,13 +250,11 @@ public interface ApiInterface {
     @POST("Inbound/MoveStockToAuditBin")
     Call<String> MoveStockToAuditBin(@Body WMSCoreMessage oRequest);
 
-
     @POST("HHStockTake/GetLocationStatusForHH")
     Call<String> GetLocationStatusForHH(@Body WMSCoreMessage oRequest);
 
     @POST("HHStockTake/GetHHDetails")
     Call<String> GetHHDetails(@Body WMSCoreMessage oRequest);
-
 
     @POST("HHStockTake/UpsertEANDetails")
     Call<String> UpsertEANDetails(@Body WMSCoreMessage oRequest);
@@ -272,12 +265,10 @@ public interface ApiInterface {
     @POST("HHStockTake/GetStockDetailsHH")
     Call<String> GetStockDetailsHH(@Body WMSCoreMessage oRequest);
 
-
     @POST("Outbound/GetBoxNumberForVLPD")
     Call<String> GetBoxNumberForVLPD(@Body WMSCoreMessage oRequest);
 
     //ECOM BULK ORDER PACKING
-
     @POST("ECOM/GetClientResources")
     Call<String> GetClientResources(@Body WMSCoreMessage oRequest);
 
@@ -289,13 +280,11 @@ public interface ApiInterface {
 
     // Padmaja
     // NON RSN VLPD PICKING
-
     @POST("VLPD/GetVLPDsForNonRSN")
     Call<String> GetVLPDsForNonRSN(@Body WMSCoreMessage oRequest);
 
     @POST("VLPD/ValidateNONRSNSKUAndConfirmPicking")
     Call<String> ValidateNONRSNSKUAndConfirmPicking(@Body WMSCoreMessage oRequest);
-
 
     // Non RSN Loading
     @POST("VLPD/GetNonRSNVLPDSKUList")
@@ -304,12 +293,14 @@ public interface ApiInterface {
     @POST("VLPD/GetNonRSNOpenRefNumberList")
     Call<String> GetNonRSNOpenRefNumberList(@Body WMSCoreMessage oRequest);
 
+    @POST("VLPD/getNONRSNSKULoadingInfo")
+    Call<String> getNONRSNSKULoadingInfo(@Body WMSCoreMessage oRequest);
+
     @POST("VLPD/GetNonRSNVLPDSKUPendingDetails")
     Call<String> GetNonRSNVLPDSKUPendingDetails(@Body WMSCoreMessage oRequest);
 
     @POST("VLPD/ConfirmNonRSNVLPDLoading")
     Call<String> ConfirmNonRSNVLPDLoading(@Body WMSCoreMessage oRequest);
-
 
     // Non RSN Bin to Bin
     @POST("Transfers/GetNONRSNBinLocationSKUs")
@@ -320,11 +311,5 @@ public interface ApiInterface {
 
     @POST("Transfers/ConfirmNonRSNBinToBinInternalTransfer")
     Call<String> ConfirmNonRSNBinToBinInternalTransfer(@Body WMSCoreMessage oRequest);
-
-
-
-
-
-
 
 }

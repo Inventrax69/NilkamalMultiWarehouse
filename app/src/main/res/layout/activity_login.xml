@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/spinnerSelectDivision"
             android:layout_marginTop="14dp"
+            android:visibility="gone"
             android:layout_below="@+id/tvSelectDivision"
             android:text="RSN Type"
             android:layout_toLeftOf="@+id/spinnerSelectDivision">
@@ -35,6 +36,7 @@
             style="@style/Widget.AppCompat.Spinner.Underlined"
             android:layout_width="100dp"
             android:layout_height="45dp"
+            android:visibility="gone"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/spinnerSelectDivision">
 

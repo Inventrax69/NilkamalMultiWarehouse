@@ -127,7 +127,7 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
 
         sp = getContext().getSharedPreferences("LoginActivity", Context.MODE_PRIVATE);
 
-        rsnType = sp.getString("rsnType", "");
+       // rsnType = sp.getString("rsnType", "");
 
         lblVLPDNumber = (TextView) rootView.findViewById(R.id.lblVLPDNumber);
         lblScannedItem = (TextView) rootView.findViewById(R.id.lblScannedItem);

@@ -172,7 +172,7 @@ public class UnloadingFragment extends Fragment implements View.OnClickListener,
                 bundle.putString("StoreRefNo",storeRefNo);
                 bundle.putString("ClientId",clientId);
                 bundle.putString("InboundId",InboundId);
-                if (materialType=="HU") {
+                if (materialType.equals("HU")) {
 
                     RSNGoodsFragmentHU rsnGoodsFragmentHU = new RSNGoodsFragmentHU();
                     rsnGoodsFragmentHU.setArguments(bundle);

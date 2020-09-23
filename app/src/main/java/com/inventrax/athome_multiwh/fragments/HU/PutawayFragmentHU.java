@@ -329,7 +329,6 @@ public class PutawayFragmentHU extends Fragment implements View.OnClickListener,
                     return;
                 }
                 UpdatePalletType();
-
                 break;
             case R.id.btnCloseThree:
                 FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new HomeFragment());

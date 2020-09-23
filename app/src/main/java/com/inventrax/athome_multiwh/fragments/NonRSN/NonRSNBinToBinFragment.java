@@ -72,9 +72,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class NonRSNBinToBinFragment extends Fragment implements View.OnClickListener, BarcodeReader.TriggerListener, BarcodeReader.BarcodeListener {
+
     private static final String classCode = "API_FRAG_NonRSNBinToBinFragment";
     private View rootView;
-
     private RelativeLayout rlSelection, rlNonRSNSkuList, rlMapToPallet;
     private Button btnLoadPallet, btnBinMap, btnCancel, btnCloseTransferSelection, btnMapItemstoPallet, btnCloseMapPallet;
     private CardView cvScanLocation, cvScanPallet;
@@ -83,11 +83,8 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
     private RecyclerView rvItemsList;
     private LinearLayoutManager linearLayoutManager;
     private ExpandableHeightGridView listViewItems;
-
     private Boolean IsValidLocationorPallet = false, IsPalletScanned = false;
-
     FragmentUtils fragmentUtils;
-
     private Common common = null;
     String scanner = null;
     String getScanner = null;
@@ -200,7 +197,6 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
                 try {
                     barcodeReader.claim();
                     HoneyWellBarcodeListeners();
-
                 } catch (ScannerUnavailableException e) {
                     e.printStackTrace();
                 }
@@ -249,22 +245,19 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
                 break;
 
             case R.id.btnMapItemstoPallet:
-
                 List<ItemInfoDTO> dtoList = itemInfoDTOList;
                 finalizedList = new ArrayList<>();
                 int child = 0;
                 child = listViewItems.getAdapter().getCount();
-
                 for (int i = 0; i < child; i++) {
-
                     if (itemInfoDTOList.get(i).getPickedQuantity() != null) {
                         finalizedList.add(itemInfoDTOList.get(i));
                     }
-
                 }
 
                 if (finalizedList.size() > 0)
                     ConfirmNonRSNBinToBinInternalTransfer();
+
                 break;
 
 
@@ -281,8 +274,6 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
             public void run() {
                 getScanner = barcodeReadEvent.getBarcodeData();
                 ProcessScannedinfo(getScanner);
-
-
             }
 
         });
@@ -357,7 +348,6 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
                         if (!etLocation.getText().toString().isEmpty()) {
                             IsPalletScanned = true;
                             etPallet.setText(scannedData);
-
                         } else {
                             common.showUserDefinedAlertType(errorMessages.EMC_0015, getActivity(), getActivity(), "Error");
                         }
@@ -387,10 +377,8 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
             inventoryDTO.setFromLocation(location);
             message.setEntityObject(inventoryDTO);
 
-
             Call<String> call = null;
-            ApiInterface apiService =
-                    RestService.getClient().create(ApiInterface.class);
+            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
 
             try {
                 //Checking for Internet Connectivity
@@ -527,7 +515,9 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
 
 
     private void GetNONRSNBinLocationSKUDetails() {
+
         try {
+
             WMSCoreMessage message = new WMSCoreMessage();
             message = common.SetAuthentication(EndpointConstants.InventoryDTO, getContext());
 
@@ -584,13 +574,15 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
 
                                 itemInfoDTOList = new ArrayList<>();
                                 itemInfoDTOList.clear();
+
                                 ItemInfoDTO dto = null;
                                 final List<ItemInfoDTO> itemDto = new ArrayList<>();
+
                                 for (int i = 0; i < _lResponse.size(); i++) {
                                     dto = new ItemInfoDTO(_lResponse.get(i).entrySet());
                                     itemDto.add(dto);
-
                                 }
+
                                 itemInfoDTOList = itemDto;
                                 rlSelection.setVisibility(View.GONE);
                                 rlNonRSNSkuList.setVisibility(View.GONE);
@@ -600,7 +592,6 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
                                 listViewItems.setAdapter(null);
                                 ListAdapter adapter = new ListAdapter(getActivity(), itemDto);
                                 listViewItems.setAdapter(adapter);
-
 
                                 ProgressDialogUtils.closeProgressDialog();
 
@@ -649,6 +640,7 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
     }
 
     private void ConfirmNonRSNBinToBinInternalTransfer() {
+
         try {
             WMSCoreMessage message = new WMSCoreMessage();
             message = common.SetAuthentication(EndpointConstants.VLPDRequestDTO, getContext());
@@ -657,7 +649,6 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
             vlpdRequestDTO.setIsRSN("0");
             vlpdRequestDTO.setScannedInput(etPallet.getText().toString());
             vlpdRequestDTO.setPickerRequestedInfo(finalizedList);
-
 
             message.setEntityObject(vlpdRequestDTO);
 
@@ -711,11 +702,8 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
                                     dto = new InternalTransferDTO(_lInternalTransfer.get(i).entrySet());
                                 }
 
-
                                 if (dto.getStatus()) {
-
                                     GetNONRSNBinLocationSKUDetails();
-
                                 }
 
                                 ProgressDialogUtils.closeProgressDialog();
@@ -830,7 +818,6 @@ public class NonRSNBinToBinFragment extends Fragment implements View.OnClickList
         }
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -892,9 +879,7 @@ class ListAdapter extends BaseAdapter {
     public ListAdapter(Activity context, List<ItemInfoDTO> objects) {
         this.context = context;
         this.objects = objects;
-
     }
-
 
     @Override
     public int getCount() {
@@ -908,7 +893,6 @@ class ListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-
         return objects.indexOf(getItem(position));
     }
 
@@ -918,7 +902,6 @@ class ListAdapter extends BaseAdapter {
     }
 
     int pos;
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
@@ -958,13 +941,9 @@ class ListAdapter extends BaseAdapter {
                 CheckBox cb = (CheckBox) buttonView;
 
                 if (isChecked) {
-
                     objects.get(position).setResult("1");
-
-
                 } else {
                     objects.get(position).setResult("0");
-
                 }
 
             }
@@ -1005,6 +984,5 @@ class ListAdapter extends BaseAdapter {
         TextView txtMCode, txtDesc, txtHu, txtQty, txtBatch, txtSiteCode, txtPallet;
         EditText etQty;
         CheckBox cbSelect;
-
     }
 }

@@ -87,7 +87,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             txtInputLayoutQty, txtInputLayoutVolume, txtInputLayoutTweight, txtInputLayoutCase, txtInputLayoutRSNPrint,
             txtInputLayoutStackCount, txtInputLayoutPrintQty, txtInputLayoutPrinterIP;
     private CustomEditText etPallet, etLocation, etRSN, etLength, etBreadth, etHeight,
-            etWeight, etBox, etQty, etVolume, etTweight, etCase;
+            etWeight, etBox, etQty, etVolume, etTweight, etCase,etSloc;
 
     private EditText etRSNPrint, etStackCount, etPrintQty, etPrinterIP;
     private SearchableSpinner spinnerSelectSloc;
@@ -229,6 +229,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         etVolume = (CustomEditText) rootView.findViewById(R.id.etVolume);
         etTweight = (CustomEditText) rootView.findViewById(R.id.etTweight);
         etCase = (CustomEditText) rootView.findViewById(R.id.etCase);
+        etSloc = (CustomEditText) rootView.findViewById(R.id.etSloc);
 
         etHuSize = (CustomEditText) rootView.findViewById(R.id.etHuSize);
         etHuNum = (CustomEditText) rootView.findViewById(R.id.etHuNum);
@@ -306,12 +307,9 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                 etPallet.requestFocus();
             }
 
-
             lblStoreRefNo.setText(getArguments().getString("StoreRefNo"));
             clientId = getArguments().getString("ClientId");
             InboundId = getArguments().getString("InboundId");
-
-
             pallet = getArguments().getString("pallet");
             location = getArguments().getString("location");
             rsn = getArguments().getString("rsn");
@@ -402,7 +400,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         });
 
 
-        GetStorageLocations();
+        /*GetStorageLocations();*/
 
     }
 
@@ -620,7 +618,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                     if (scanValidator.IsLocationScanned(scannedData)) {
                         etLocation.setText(scannedData.substring(0, 7));
                         GetLocationType();
-
                         return;
                     } else {
                         common.showUserDefinedAlertType(errorMessages.EMC_0015, getActivity(), getContext(), "Error");
@@ -650,10 +647,12 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                     llRTRBarcodeScan.setVisibility(View.INVISIBLE);
                     btnSubmit.setVisibility(View.GONE);
                     btnExport.setVisibility(View.VISIBLE);
+                    btnConfirmLBH.setVisibility(View.INVISIBLE);
+                    etRSN.setText(scannedData);
+                    ConfirmReciptOnScan();
+                    return;
 
-
-
-                    if (btnConfirmLBH.isEnabled()) {
+/*                    if (btnConfirmLBH.isEnabled()) {
                         common.showUserDefinedAlertType(errorMessages.EMC_0008, getActivity(), getContext(), "Warning");
                         btnConfirmLBH.setTextColor(getResources().getColor(R.color.white));
                         btnConfirmLBH.setBackgroundResource(R.drawable.button_shape);
@@ -667,7 +666,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                         etRSN.setText(scannedData);
                         ConfirmReciptOnScan();
                         return;
-                    }
+                    }*/
                 } /*else {
                     common.showUserDefinedAlertType(errorMessages.EMC_0009, getActivity(), getContext(), "Error");
                     return;
@@ -679,10 +678,15 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                     txtInputLayoutRSN.setHint("Barcode");
                     btnExport.setVisibility(View.GONE);
-                    btnSubmit.setVisibility(View.VISIBLE);
+                    btnSubmit.setVisibility(View.INVISIBLE);
                     llRTRBarcodeScan.setVisibility(View.VISIBLE);
+                    btnConfirmLBH.setVisibility(View.INVISIBLE);
+                    mCodeWithSupplier = scannedData;
+                    etRSN.setText(scannedData.split("_")[0]);
+                    etHuNum.setText(scannedData.split("_")[2]);
+                    getSKUDeatilsWithSupplierInvoice();
 
-                    if (btnConfirmLBH.isEnabled()) {
+/*                    if (btnConfirmLBH.isEnabled()) {
                         common.showUserDefinedAlertType(errorMessages.EMC_0008, getActivity(), getContext(), "Warning");
                         btnConfirmLBH.setTextColor(getResources().getColor(R.color.white));
                         btnConfirmLBH.setBackgroundResource(R.drawable.button_shape);
@@ -690,14 +694,15 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                         etLength.setEnabled(true);
                         etHeight.setEnabled(true);
                         etBreadth.setEnabled(true);
-                        return;
 
                     } else {
                         mCodeWithSupplier = scannedData;
                         etRSN.setText(scannedData.split("_")[0]);
                         getSKUDeatilsWithSupplierInvoice();
-                        return;
-                    }
+
+                    }*/
+
+                    return;
 
                 }
 
@@ -917,7 +922,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         etPallet.setEnabled(true);
         etPallet.requestFocus();
 
-
         etVolume.setText("");
         etWeight.setText("");
         etTweight.setText("");
@@ -947,6 +951,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
     }
 
     public void getPrintDetails() {
+
         try {
 
             WMSCoreMessage message = new WMSCoreMessage();
@@ -1029,16 +1034,15 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                                 ivScanRSN.setImageResource(R.drawable.check);
                                             }
 
-
                                             lblPrintScannedSku.setText(inboundDTO.getMaterialCode());
                                             lblPrintSKUDesc.setText(inboundDTO.getmDesc());
                                         } else {
-
 
                                             etRSNPrint.setFocusable(true);
                                             etRSNPrint.setText("");
 
                                             common.showUserDefinedAlertType(errorMessages.EMC_0045, getActivity(), getContext(), "Warning");
+
                                             return;
                                         }
 
@@ -1092,21 +1096,19 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
     public void printValidation() {
 
-
         if (etRSNPrint.getText().toString().isEmpty()) {
             common.showUserDefinedAlertType(errorMessages.EMC_0027, getActivity(), getContext(), "Error");
             etRSN.setFocusable(true);
             return;
         }
-        if (etStackCount.getText().toString().isEmpty()) {
 
+        if (etStackCount.getText().toString().isEmpty()) {
             common.showUserDefinedAlertType(errorMessages.EMC_0028, getActivity(), getContext(), "Error");
             etStackCount.setFocusable(true);
             return;
         }
 
         if (etPrintQty.getText().toString().isEmpty()) {
-
             common.showUserDefinedAlertType(errorMessages.EMC_0029, getActivity(), getContext(), "Error");
             etPrintQty.setFocusable(true);
             return;
@@ -1116,22 +1118,18 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
             if (ipAddress != null) {
                 //PrinterIPAddress = ipAddress;
-
                 printerIPAddress = ipAddress;
-
-
             } else {
                 common.showUserDefinedAlertType(errorMessages.EMC_0030, getActivity(), getContext(), "Error");
                 return;
             }
-
             printModule();
-
         } catch (Exception ex) {
         }
     }
 
     public void printModule() {
+
         try {
 
             WMSCoreMessage message = new WMSCoreMessage();
@@ -1143,10 +1141,8 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             inboundDTO.setIpAddress(etPrinterIP.getText().toString());
             message.setEntityObject(inboundDTO);
 
-
             Call<String> call = null;
-            ApiInterface apiService =
-                    RestService.getClient().create(ApiInterface.class);
+            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
 
             try {
                 //Checking for Internet Connectivity
@@ -1193,18 +1189,16 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     return;
                                 }
                             } else {
+
                                 core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
                                 List<LinkedTreeMap<?, ?>> _lPrintList = new ArrayList<LinkedTreeMap<?, ?>>();
                                 _lPrintList = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
                                 List<InboundDTO> lstInventory = new ArrayList<InboundDTO>();
                                 InboundDTO inboundDTO = null;
 
-
                                 for (int i = 0; i < _lPrintList.size(); i++) {
-
                                     inboundDTO = new InboundDTO(_lPrintList.get(i).entrySet());
                                     lstInventory.add(inboundDTO);
-
                                 }
 
                                 ProgressDialogUtils.closeProgressDialog();
@@ -1771,15 +1765,15 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             inboundDTO.setLocation(etLocation.getText().toString());
             inboundDTO.setUniqueRSN(etRSN.getText().toString());
             inboundDTO.setPalletNo(etPallet.getText().toString());
-            inboundDTO.setSelectedStorageLocation(storageloc);
+           // inboundDTO.setSelectedStorageLocation(storageloc);
+            inboundDTO.setSelectedStorageLocation("");
             inboundDTO.setStoreRefNo(lblStoreRefNo.getText().toString());
             inboundDTO.setItemSerialNo(etCase.getText().toString());
             message.setEntityObject(inboundDTO);
 
 
             Call<String> call = null;
-            ApiInterface apiService =
-                    RestService.getClient().create(ApiInterface.class);
+            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
 
             try {
                 //Checking for Internet Connectivity
@@ -1820,18 +1814,15 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                 WMSExceptionMessage owmsExceptionMessage = null;
                                 for (int i = 0; i < _lExceptions.size(); i++) {
-
                                     owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-
-
                                 }
+
                                 ProgressDialogUtils.closeProgressDialog();
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                 ivScanSku.setImageResource(R.drawable.warning_img);
                                 common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
                             } else {
 
-                                Log.v("ABCDE",new Gson().toJson(core));
                                 core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
 
                                 List<LinkedTreeMap<?, ?>> _lstInbounddata = new ArrayList<LinkedTreeMap<?, ?>>();
@@ -1843,6 +1834,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     oInboundData = new InboundDTO(_lstInbounddata.get(i).entrySet());
                                     oInboundDataDTO = oInboundData;
                                 }
+
                                 lblScannedSku.setText("SKU: " + oInboundData.getMaterialCode() + "|" + "Batch: " + oInboundData.getBatchNo());
                                 lblDesc.setText("Desc. : " + oInboundData.getmDesc());
                                 etBox.setText(oInboundData.getHUNumber() + "/" + oInboundData.getHUsize());
@@ -1856,6 +1848,8 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 etTweight.setText(oInboundData.getPalletInfoDTO().get(0).getLoadedWeight());
                                 MaterialMasterId = oInboundData.getMaterialMasterId();
                                 etCase.setText(oInboundData.getSerialNo());
+                                etSloc.setText(oInboundData.getSelectedStorageLocation());
+
                                 if (oInboundData.getDimensionsDTO().get(0).getLength().equals("0") || oInboundData.getDimensionsDTO().get(0).getLength().equalsIgnoreCase("0.00")) {
                                     etLength.setEnabled(true);
                                     etBreadth.setEnabled(true);
@@ -1864,6 +1858,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     btnConfirmLBH.setEnabled(true);
                                     btnConfirmLBH.setTextColor(getResources().getColor(R.color.white));
                                     btnConfirmLBH.setBackgroundResource(R.drawable.button_shape);
+                                    common.showUserDefinedAlertType(errorMessages.EMC_0008_01, getActivity(), getContext(), "Warning");
                                 } else {
                                     etLength.setEnabled(false);
                                     etBreadth.setEnabled(false);
@@ -1879,9 +1874,9 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                         isMaxVolumeReached = false;
                                         isMaxWeightReached = false;
                                     }
-
-
                                 }
+
+
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                 ivScanSku.setImageResource(R.drawable.check);
                                 ProgressDialogUtils.closeProgressDialog();
@@ -1944,11 +1939,12 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             inboundDTO.setLocation(etLocation.getText().toString());
             inboundDTO.setMaterialCode(mCodeWithSupplier);
             inboundDTO.setPalletNo(etPallet.getText().toString());
-            inboundDTO.setSelectedStorageLocation(storageloc);
+           // inboundDTO.setSelectedStorageLocation(storageloc);
+            inboundDTO.setSelectedStorageLocation(etSloc.getText().toString());
             inboundDTO.setStoreRefNo(lblStoreRefNo.getText().toString());
             inboundDTO.setItemSerialNo(etCase.getText().toString());
             inboundDTO.setHUNumber(etHuNum.getText().toString());
-            inboundDTO.setReceivedQty(etQuantity.getText().toString());
+            inboundDTO.setReceivedQty("1");
             message.setEntityObject(inboundDTO);
 
 
@@ -1965,7 +1961,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                 // } else {
                 // DialogUtils.showAlertDialog(getActivity(), "Please enable internet");
                 // return;
-
                 // }
 
             } catch (Exception ex) {
@@ -1995,11 +1990,9 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                 WMSExceptionMessage owmsExceptionMessage = null;
                                 for (int i = 0; i < _lExceptions.size(); i++) {
-
                                     owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-
-
                                 }
+
                                 ProgressDialogUtils.closeProgressDialog();
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                 ivScanSku.setImageResource(R.drawable.warning_img);
@@ -2012,10 +2005,10 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                 InboundDTO oInboundData = null;
                                 for (int i = 0; i < _lstInbounddata.size(); i++) {
-
                                     oInboundData = new InboundDTO(_lstInbounddata.get(i).entrySet());
                                     oInboundDataDTO = oInboundData;
                                 }
+
                                 lblScannedSku.setText("SKU: " + oInboundData.getMaterialCode() + "|" + "Batch: " + oInboundData.getBatchNo());
                                 lblDesc.setText("Desc. : " + oInboundData.getmDesc());
                                 etBox.setText(oInboundData.getHUNumber() + "/" + oInboundData.getHUsize());
@@ -2029,8 +2022,10 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 etTweight.setText(oInboundData.getPalletInfoDTO().get(0).getLoadedWeight());
                                 MaterialMasterId = oInboundData.getMaterialMasterId();
                                 etCase.setText(oInboundData.getSerialNo());
-                                etHuNum.setText("");
-                                etQty.setText("");
+                                etHuNum.setText(oInboundData.getHUNumber());
+                                etHuSize.setText(oInboundData.getHUsize());
+                                etSloc.setText(oInboundData.getSelectedStorageLocation());
+
                                 if (oInboundData.getDimensionsDTO().get(0).getLength().equals("0") || oInboundData.getDimensionsDTO().get(0).getLength().equalsIgnoreCase("0.00")) {
                                     etLength.setEnabled(true);
                                     etBreadth.setEnabled(true);
@@ -2047,16 +2042,14 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     btnConfirmLBH.setEnabled(false);
                                     btnConfirmLBH.setTextColor(getResources().getColor(R.color.black));
                                     btnConfirmLBH.setBackgroundResource(R.drawable.button_hide);
-
                                     try {
                                         ValidateWeightAndVolume(oInboundData);
                                     } catch (Exception ex) {
                                         isMaxVolumeReached = false;
                                         isMaxWeightReached = false;
                                     }
-
-
                                 }
+
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                 ivScanSku.setImageResource(R.drawable.check);
                                 ProgressDialogUtils.closeProgressDialog();
@@ -2079,7 +2072,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                     // response object fails
                     @Override
                     public void onFailure(Call<String> call, Throwable throwable) {
-                        //Toast.makeText(LoginActivity.this, throwable.toString(), Toast.LENGTH_LONG).show();
                         ProgressDialogUtils.closeProgressDialog();
                         common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
                     }
@@ -2110,7 +2102,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
         try {
 
-
             WMSCoreMessage message = new WMSCoreMessage();
             message = common.SetAuthentication(EndpointConstants.Inbound, getContext());
             InboundDTO inboundDTO = new InboundDTO();
@@ -2118,7 +2109,8 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             inboundDTO.setClientID(clientId);
             inboundDTO.setLocation(etLocation.getText().toString());
             inboundDTO.setPalletNo(etPallet.getText().toString());
-            inboundDTO.setSelectedStorageLocation(storageloc);
+            //inboundDTO.setSelectedStorageLocation(storageloc);
+            inboundDTO.setSelectedStorageLocation("");
             inboundDTO.setStoreRefNo(lblStoreRefNo.getText().toString());
             inboundDTO.setItemSerialNo(etCase.getText().toString());
             inboundDTO.setMaterialCode(mCodeWithSupplier);
@@ -2126,8 +2118,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
 
             Call<String> call = null;
-            ApiInterface apiService =
-                    RestService.getClient().create(ApiInterface.class);
+            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
 
             try {
                 //Checking for Internet Connectivity
@@ -2138,7 +2129,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                 // } else {
                 // DialogUtils.showAlertDialog(getActivity(), "Please enable internet");
                 // return;
-
                 // }
 
             } catch (Exception ex) {
@@ -2186,6 +2176,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                 ivScanSku.setImageResource(R.drawable.warning_img);
                                 common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
+
                             } else {
                                 core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
 
@@ -2194,10 +2185,10 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                 InboundDTO oInboundData = null;
                                 for (int i = 0; i < _lstInbounddata.size(); i++) {
-
                                     oInboundData = new InboundDTO(_lstInbounddata.get(i).entrySet());
                                     oInboundDataDTO = oInboundData;
                                 }
+
                                 lblScannedSku.setText("SKU: " + oInboundData.getMaterialCode().split("_")[0] + "|" + "Batch: " + oInboundData.getBatchNo());
                                 lblDesc.setText("Desc. : " + oInboundData.getmDesc());
                                 etBox.setText(oInboundData.getHUNumber() + "/" + oInboundData.getHUsize());
@@ -2206,11 +2197,11 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 etBreadth.setText(oInboundData.getDimensionsDTO().get(0).getBreadth());
                                 etHeight.setText(oInboundData.getDimensionsDTO().get(0).getHeight());
                                 etWeight.setText(oInboundData.getDimensionsDTO().get(0).getWeight());
-
                                 MaterialMasterId = oInboundData.getMaterialMasterId();
                                 etCase.setText(oInboundData.getSerialNo());
                                 etHuSize.setText(oInboundData.getHUsize());
-
+                               // etHuNum.setText(oInboundData.getHUNumber());
+                                ProgressDialogUtils.closeProgressDialog();
                                 if (oInboundData.getDimensionsDTO().get(0).getLength().equals("0") || oInboundData.getDimensionsDTO().get(0).getLength().equalsIgnoreCase("0.00")) {
                                     etLength.setEnabled(true);
                                     etBreadth.setEnabled(true);
@@ -2219,7 +2210,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     btnConfirmLBH.setEnabled(true);
                                     btnConfirmLBH.setTextColor(getResources().getColor(R.color.white));
                                     btnConfirmLBH.setBackgroundResource(R.drawable.button_shape);
-                                    common.showUserDefinedAlertType(errorMessages.EMC_0008, getActivity(), getContext(), "Warning");
+                                    common.showUserDefinedAlertType(errorMessages.EMC_0008_01, getActivity(), getContext(), "Warning");
                                 } else {
                                     etLength.setEnabled(false);
                                     etBreadth.setEnabled(false);
@@ -2228,11 +2219,12 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     btnConfirmLBH.setEnabled(false);
                                     btnConfirmLBH.setTextColor(getResources().getColor(R.color.black));
                                     btnConfirmLBH.setBackgroundResource(R.drawable.button_hide);
-
+                                    insertSKUDeatilsWithSupplierInvoice();
                                 }
+
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                 ivScanSku.setImageResource(R.drawable.check);
-                                ProgressDialogUtils.closeProgressDialog();
+
 
                             }
 
@@ -2283,7 +2275,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
         try {
 
-
             WMSCoreMessage message = new WMSCoreMessage();
             message = common.SetAuthentication(EndpointConstants.Inbound, getContext());
             InboundDTO inboundDTO = new InboundDTO();
@@ -2296,8 +2287,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
 
             Call<String> call = null;
-            ApiInterface apiService =
-                    RestService.getClient().create(ApiInterface.class);
+            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
 
             try {
                 //Checking for Internet Connectivity
@@ -2340,10 +2330,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                     WMSExceptionMessage owmsExceptionMessage = null;
                                     for (int i = 0; i < _lExceptions.size(); i++) {
-
                                         owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-
-
                                     }
                                     ProgressDialogUtils.closeProgressDialog();
                                     cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.white));
@@ -2716,7 +2703,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         }
     }
 
-
     // sending exception to the database
     public void logException() {
 
@@ -2792,7 +2778,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         }
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -2846,7 +2831,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
 
     }
 
