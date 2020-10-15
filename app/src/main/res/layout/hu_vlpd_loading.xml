@@ -15,7 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/tvSelectVLPDNo"
@@ -74,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/rlVLPDLoading"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_below="@+id/rlVLPDSelect"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -132,6 +132,69 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/lblDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lblScannedItem"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+
+
+
+        <TextView
+            android:id="@+id/tvPickQty"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/lblDesc"
+            android:layout_marginTop="20dp"
+            android:text="@string/pickedQty"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/lblPickQty"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lblDesc"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@+id/tvPickQty"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:textColor="@color/colorAccent"/>
+
+        <TextView
+            android:id="@+id/tvLoadQty"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tvPickQty"
+            android:layout_marginTop="20dp"
+            android:text="@string/load_qty"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/lblLoadQty"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvPickQty"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@+id/tvLoadQty"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:textColor="@color/colorAccent"/>
 
         <TextView
             android:id="@+id/tvBoxCount"
@@ -139,7 +202,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/lblScannedItem"
+            android:layout_below="@+id/lblLoadQty"
             android:layout_marginTop="20dp"
             android:text="@string/box_count"
             android:layout_alignParentLeft="true">
@@ -151,7 +214,7 @@
             style="@style/textViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lblScannedItem"
+            android:layout_below="@+id/lblLoadQty"
             android:layout_marginTop="20dp"
             android:textStyle="bold"
             android:layout_toRightOf="@+id/tvBoxCount"

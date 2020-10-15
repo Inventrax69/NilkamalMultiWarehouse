@@ -13,6 +13,8 @@
         android:id="@+id/rlPick"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
+        android:background="@color/white"
         android:layout_below="@+id/rlSelectReason"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -305,6 +307,38 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/tvsloc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="@string/sloc"/>
+
+                <TextView
+                    android:id="@+id/lblsloc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.7"
+                    android:layout_marginRight="5dp"
+                    android:gravity="right"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp"
+                    android:textStyle="italic|bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -437,8 +471,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/qty"
-                        android:inputType="date"
+                        android:inputType="number"
                         android:singleLine="true" />
+
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
@@ -512,6 +547,7 @@
 
     <RelativeLayout
         android:id="@+id/rlSelectReason"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
@@ -571,12 +607,13 @@
         </RelativeLayout>
 
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rlPrint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/rlSelection"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="5dp"
         android:visibility="gone">

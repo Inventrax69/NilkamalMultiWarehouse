@@ -86,6 +86,12 @@ public class ItemInfoDTO implements Serializable {
     private String SiteCode;
     @SerializedName("Result")
     private String result;
+    @SerializedName("IsRSN")
+    private String IsRSN;
+
+
+    @SerializedName("StorageLocation")
+    private String StorageLocation;
 
 
     public ItemInfoDTO() {
@@ -249,7 +255,7 @@ public class ItemInfoDTO implements Serializable {
                     break;
                 case "HuSizeSpecified":
                     if (entry.getValue() != null) {
-                        this.setHuNoSpecified(Boolean.parseBoolean(entry.getValue().toString()));
+                        this.setHuSizeSpecified(Boolean.parseBoolean(entry.getValue().toString()));
                     }
                     break;
                 case "LocationIdSpecified":
@@ -296,6 +302,16 @@ public class ItemInfoDTO implements Serializable {
                 case "SiteCode":
                     if (entry.getValue() != null) {
                         this.setSiteCode(entry.getValue().toString());
+                    }
+                    break;
+                case "IsRSN":
+                    if (entry.getValue() != null) {
+                        this.setIsRSN(entry.getValue().toString());
+                    }
+                    break;
+               case "StorageLocation":
+                    if (entry.getValue() != null) {
+                        this.setStorageLocation(entry.getValue().toString());
                     }
                     break;
 
@@ -617,5 +633,22 @@ public class ItemInfoDTO implements Serializable {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public String getIsRSN() {
+        return IsRSN;
+    }
+
+    public void setIsRSN(String isRSN) {
+        IsRSN = isRSN;
+    }
+
+
+    public String getStorageLocation() {
+        return StorageLocation;
+    }
+
+    public void setStorageLocation(String storageLocation) {
+        StorageLocation = storageLocation;
     }
 }

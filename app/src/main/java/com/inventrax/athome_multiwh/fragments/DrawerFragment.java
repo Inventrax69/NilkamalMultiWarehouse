@@ -174,8 +174,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         MenuModel childModel = new MenuModel("Goods-In", false, false, "Goods-In");
         childModelsList.add(childModel);
 
-        childModel = new MenuModel("NonRSN Goods-In", false, false, "Goods-In");
-        childModelsList.add(childModel);
+/*        childModel = new MenuModel("NonRSN Goods-In", false, false, "Goods-In");
+        childModelsList.add(childModel);*/
 
         childModel = new MenuModel("Receive from Site", false, false, "Receive from Site");
         childModelsList.add(childModel);
@@ -214,11 +214,11 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         childModel = new MenuModel("VLPD Loading", false, false, "VLPD Loading");
         childModelsList.add(childModel);
 
-        childModel = new MenuModel("NonRSN Picking", false, false, "VLPD Picking");
-        childModelsList.add(childModel);
+/*        childModel = new MenuModel("NonRSN Picking", false, false, "VLPD Picking");
+        childModelsList.add(childModel);*/
 
-        childModel = new MenuModel("NonRSN Loading", false, false, "Group Loading");
-        childModelsList.add(childModel);
+/*        childModel = new MenuModel("NonRSN Loading", false, false, "Group Loading");
+        childModelsList.add(childModel);*/
 
 
         if (menuModel.hasChildren) {

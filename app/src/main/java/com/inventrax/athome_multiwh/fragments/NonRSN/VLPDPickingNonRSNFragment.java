@@ -759,7 +759,6 @@ public class VLPDPickingNonRSNFragment extends Fragment implements View.OnClickL
             oItem.setRequestType("PICK");
 
             if (IsSkipItem) {
-
                 oItem.setRequestType("SKIP");
                 oItem.setSkipReason(SkipReason);
                 oItem.setUserRequestedQty(etQty.getText().toString());

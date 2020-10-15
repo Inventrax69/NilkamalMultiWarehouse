@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -100,6 +101,7 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
     ToneGenerator toneGenerator;
     private ErrorMessages errorMessages;
     private SoundUtils soundUtils;
+    LinearLayout layout;
 
     ItemInfoDTO vlpdItem = null;
     private boolean isPrintWindowRequired = false;
@@ -107,6 +109,7 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
     private String ipAddress = null, printerIPAddress = null;
     private boolean IsSkipItem = false, IsRSNScanned = false;
     VLPDResponseDTO vlpdresponseobj = null;
+    String IsRSN="0";
     private final BroadcastReceiver myDataReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -137,6 +140,8 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
         rlSelectReason = (RelativeLayout) rootView.findViewById(R.id.rlSelectReason);
         rlVLPD = (RelativeLayout) rootView.findViewById(R.id.rlVLPD);
         rlPrint = (RelativeLayout) rootView.findViewById(R.id.rlPrint);
+
+        layout = (LinearLayout) rootView.findViewById(R.id.layout);
 
         lblRefNo = (TextView) rootView.findViewById(R.id.lblRefNo);
         lblDock = (TextView) rootView.findViewById(R.id.lblDock);
@@ -313,6 +318,15 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
         LoadSkipReason();
     }
 
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
+    }
+
     //button Clicks
     @Override
     public void onClick(View v) {
@@ -353,26 +367,51 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
                 break;
 
             case R.id.btnPick:
-                common.setIsPopupActive(false);
-                if (IsRSNScanned && !(vlpdresponseobj.getPreviousPickedItemResponce().get(0).getMessage().equals(etQty.getText().toString()))) {
-                    isPrintWindowRequired = true;
+                Common.setIsPopupActive(false);
+                if(IsRSN!=null && IsRSN.equals("1")){
+                    if (IsRSNScanned && !(vlpdresponseobj.getPreviousPickedItemResponce().get(0).getMessage().equals(etQty.getText().toString()))) {
+                        isPrintWindowRequired = true;
+                        _oldRSNNumber = lblScannedBarcode.getText().toString();
+                        pickedMMID = vlpdItem.getMaterialMasterId();
+
+                    }
+                    ValidateBarcodeAndConfirmPicking();
                     _oldRSNNumber = lblScannedBarcode.getText().toString();
-                    pickedMMID = vlpdItem.getMaterialMasterId();
+                    if (_isPrintWindowRequired) {
+                        rlPrint.setVisibility(View.VISIBLE);
+                        rlPick.setVisibility(View.GONE);
+                        rlSelectReason.setVisibility(View.GONE);
+                        etOldRsn.setText(_oldRSNNumber);
+                        cvScanOldRsn.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        ivScanOldRsn.setImageResource(R.drawable.check);
+                        GetNewlyGeneratedRSNNumberByRSNNumber();
 
-                }
-                ValidateBarcodeAndConfirmPicking();
-                _oldRSNNumber = lblScannedBarcode.getText().toString();
-                if (_isPrintWindowRequired) {
-                    rlPrint.setVisibility(View.VISIBLE);
-                    rlPick.setVisibility(View.GONE);
-                    rlSelectReason.setVisibility(View.GONE);
-                    etOldRsn.setText(_oldRSNNumber);
-                    cvScanOldRsn.setCardBackgroundColor(getResources().getColor(R.color.white));
-                    ivScanOldRsn.setImageResource(R.drawable.check);
-                    GetNewlyGeneratedRSNNumberByRSNNumber();
+                        return;
+                    }
+                }else{
+                    if(etQty.getText().toString().equals("")){
+                        common.showUserDefinedAlertType("Please enter valid qty", getActivity(), getContext(), "Error");
+                        return;
+                    }
 
-                    return;
+                    if(!isNumeric(etQty.getText().toString()) && !isNumeric(lblReqQty.getText().toString())){
+                        common.showUserDefinedAlertType("Please enter valid qty or Req Qty is not numeric", getActivity(), getContext(), "Error");
+                        return;
+                    }
+
+                    if(Integer.parseInt(etQty.getText().toString())<=0){
+                        common.showUserDefinedAlertType("Please enter valid qty", getActivity(), getContext(), "Error");
+                        return;
+                    }
+
+                    if(Integer.parseInt(etQty.getText().toString())>((int)Double.parseDouble(lblReqQty.getText().toString()))){
+                        common.showUserDefinedAlertType("Given qty is more than Req Qty", getActivity(), getContext(), "Error");
+                        return;
+                    }
+
+                    ValidateNONRSNSKUAndConfirmPicking();
                 }
+
 
                 break;
             case R.id.btnPrint:
@@ -425,6 +464,195 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
         } catch (Exception ex) {
         }
 
+    }
+
+    public void ValidateNONRSNSKUAndConfirmPicking() {
+
+        try {
+
+            if (lblSKU.getText().toString().isEmpty()) {
+                common.showUserDefinedAlertType(errorMessages.EMC_039, getActivity(), getContext(), "Error");
+                btnPick.setEnabled(false);
+                return;
+            }
+            if (!etQty.getText().toString().isEmpty()) {
+                UserrequestedQty = Double.parseDouble(etQty.getText().toString());
+            }
+            RequiredQty = Double.parseDouble(lblReqQty.getText().toString());
+            if (UserrequestedQty > RequiredQty) {
+                common.showUserDefinedAlertType(errorMessages.EMC_0064, getActivity(), getContext(), "Error");
+                return;
+            }
+            List<ItemInfoDTO> lstiteminfo = new ArrayList<>();
+            WMSCoreMessage message = new WMSCoreMessage();
+            message = common.SetAuthentication(EndpointConstants.VLPDRequestDTO, getContext());
+            VLPDRequestDTO vlpdRequestDTO = new VLPDRequestDTO();
+            vlpdRequestDTO.setUserID(userId);
+            vlpdRequestDTO.setVlpdID(vlpdId);
+            /*double db = Double.parseDouble(lblReqQty.getText().toString());
+            int x = (int) db;
+            vlpdRequestDTO.setReqQuantity(15); ///added by hemnath*/
+
+            vlpdRequestDTO.setUniqueRSN(lblScannedBarcode.getText().toString());
+            // For Non RSN case it is 0 For RSN picking it 1
+            vlpdRequestDTO.setIsRSN("0");
+            ItemInfoDTO oIteminfo = new ItemInfoDTO();
+            oIteminfo = vlpdItem;
+
+            oIteminfo.setPalletNumber(etPallet.getText().toString());
+            oIteminfo.setMcode(lblSKU.getText().toString());
+            oIteminfo.setReqQuantity(lblReqQty.getText().toString());
+            oIteminfo.setUserScannedRSN(lblScannedBarcode.getText().toString());
+            oIteminfo.setUserRequestedQty(etQty.getText().toString());
+            oIteminfo.setItem_SerialNumber(lblCaseNo.getText().toString());
+            PickQty = etQty.getText().toString();
+            lstiteminfo.add(oIteminfo);
+            vlpdRequestDTO.setPickerRequestedInfo(lstiteminfo);
+            message.setEntityObject(vlpdRequestDTO);
+
+            Call<String> call = null;
+            ApiInterface apiService =
+                    RestService.getClient().create(ApiInterface.class);
+
+            try {
+                //Checking for Internet Connectivity
+                // if (NetworkUtils.isInternetAvailable()) {
+                // Calling the Interface method
+                call = apiService.ValidateNONRSNSKUAndConfirmPicking(message);
+                ProgressDialogUtils.showProgressDialog("Please Wait");
+                // } else {
+                // DialogUtils.showAlertDialog(getActivity(), "Please enable internet");
+                // return;
+                // }
+
+            } catch (Exception ex) {
+                try {
+                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "ValidateBarcodeAndConfirmPicking_01", getActivity());
+                    logException();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ProgressDialogUtils.closeProgressDialog();
+                common.showUserDefinedAlertType(errorMessages.EMC_0002, getActivity(), getContext(), "Error");
+
+            }
+            try {
+                //Getting response from the method
+                call.enqueue(new Callback<String>() {
+
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        try {
+                            core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
+                            if ((core.getType().toString().equals("Exception"))) {
+                                List<LinkedTreeMap<?, ?>> _lExceptions = new ArrayList<LinkedTreeMap<?, ?>>();
+                                _lExceptions = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
+                                WMSExceptionMessage owmsExceptionMessage = null;
+                                for (int i = 0; i < _lExceptions.size(); i++) {
+                                    owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
+                                }
+
+                                ProgressDialogUtils.closeProgressDialog();
+                                lblScannedBarcode.setText("");
+                                etQty.setText("");
+
+                                common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
+
+                            } else {
+                                core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
+
+                                List<LinkedTreeMap<?, ?>> _lVLPD = new ArrayList<LinkedTreeMap<?, ?>>();
+                                _lVLPD = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
+                                List<VLPDResponseDTO> lstDto = new ArrayList<VLPDResponseDTO>();
+                                List<String> lstVLPD = new ArrayList<>();
+                                VLPDResponseDTO dto = null;
+                                for (int i = 0; i < _lVLPD.size(); i++) {
+                                    dto = new VLPDResponseDTO(_lVLPD.get(i).entrySet());
+                                    vlpdresponseobj = dto;
+                                    lstDto.add(dto);
+                                }
+                                ProgressDialogUtils.closeProgressDialog();
+                                if (isPrintWindowRequired) {
+                                    ShowPrintPanel();
+
+                                }
+                                if (dto.getSuggested()) {
+                                    ClearFields();
+                                    ClearUIElemennts();
+                                    lblBox.setText("");
+                                    lblReqQty.setText("");
+                                    common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Error");
+                                    return;
+                                }
+                                if (dto.getSuggestedItem() != null) {
+                                    for (ItemInfoDTO oiteminfo : dto.getSuggestedItem()) {
+                                        vlpdItem = oiteminfo;
+                                    }
+                                }
+
+                                //vlpdItem =dto.getSuggestedItem();
+                                ProgressDialogUtils.closeProgressDialog();
+                                if (vlpdItem != null) {
+                                    if (vlpdItem.getMcode() != null && vlpdItem.getMcode() != "") {
+
+                                        UpDateUI(vlpdItem);
+                                        if (isPrintWindowRequired) {
+                                            ShowPrintPanel();
+                                        }
+
+                                        if (lblRefNo.getText().toString().isEmpty()) {
+                                            //MessageBox.Show("No item pending to pick with ref: " + lblRefNumberValue.Text);
+                                            ClearUIElemennts();
+
+                                        } else {
+                                        }
+                                    } else {
+                                        common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Error");
+                                        return;
+                                    }
+                                }
+
+                            }
+
+                        } catch (Exception ex) {
+                            try {
+                                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "ValidateBarcodeAndConfirmPicking_02", getActivity());
+                                logException();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            ProgressDialogUtils.closeProgressDialog();
+                        }
+                    }
+
+                    // response object fails
+                    @Override
+                    public void onFailure(Call<String> call, Throwable throwable) {
+                        //Toast.makeText(LoginActivity.this, throwable.toString(), Toast.LENGTH_LONG).show();
+                        ProgressDialogUtils.closeProgressDialog();
+                        common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
+                    }
+                });
+            } catch (Exception ex) {
+                try {
+                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "ValidateBarcodeAndConfirmPicking_03", getActivity());
+                    logException();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ProgressDialogUtils.closeProgressDialog();
+                common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
+            }
+        } catch (Exception ex) {
+            try {
+                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "ValidateBarcodeAndConfirmPicking_04", getActivity());
+                logException();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ProgressDialogUtils.closeProgressDialog();
+            common.showUserDefinedAlertType(errorMessages.EMC_0003, getActivity(), getContext(), "Error");
+        }
     }
 
     public void PrintRSNnumber() {
@@ -981,7 +1209,7 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
                 lblDesc.setText(suggestedItem.getDescription());
                 lblBatch.setText(suggestedItem.getBatchNumber());
                 lblLocation.setText(suggestedItem.getLocation());
-
+                IsRSN=suggestedItem.getIsRSN();
                 etQty.setText(suggestedItem.getReqQuantity().toString());
                 lblBox.setText(suggestedItem.getHuNo() + "/" + suggestedItem.getHuSize());
                 lblReqQty.setText(suggestedItem.getReqQuantity().toString());
@@ -992,6 +1220,19 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
                 lblDock.setText(suggestedItem.getDock());
                 lblRefNo.setText(suggestedItem.getRefDoc());
 
+                layout.setVisibility(View.VISIBLE);
+                btnPick.setEnabled(false);
+                etQty.setEnabled(false);
+                btnPick.setTextColor(getResources().getColor(R.color.black));
+                btnPick.setBackgroundResource(R.drawable.button_hide);
+                if(IsRSN.equals("0")){
+                    etQty.setText("");
+                    etQty.setEnabled(true);
+                    btnPick.setEnabled(true);
+                    btnPick.setTextColor(getResources().getColor(R.color.white));
+                    btnPick.setBackgroundResource(R.drawable.button_shape);
+                    layout.setVisibility(View.GONE);
+                }
             } else {
                 if (!lblSKU.getText().toString().isEmpty()) {
                     //   MessageBox.Show("No item pending to pick with ref: " + lblSKU.getText().toString());
@@ -1022,6 +1263,7 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
         lblDock.setText("");
         lblScannedBarcode.setText("");
         lblBox.setText("0");
+        IsRSN="0";
     }
 
     private void ShowPrintPanel() {
@@ -1446,31 +1688,35 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
             if (!ProgressDialogUtils.isProgressActive()) {
 
                 if (ScanValidator.IsPalletScanned(scannedData)) {
-                    if (lblSKU.getText().toString().isEmpty()) {
-                        clearFields();
-                        common.showUserDefinedAlertType(errorMessages.EMC_039, getActivity(), getContext(), "Error");
-                        return;
-                    }
-                    etPallet.setText(scannedData);
+                    if(IsRSN!=null &&  IsRSN.equals("1")) {
+                        if (lblSKU.getText().toString().isEmpty()) {
+                            clearFields();
+                            common.showUserDefinedAlertType(errorMessages.EMC_039, getActivity(), getContext(), "Error");
+                            return;
+                        }
+                        etPallet.setText(scannedData);
 
-                    cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
-                    ivScanPallet.setImageResource(R.drawable.check);
+                        cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        ivScanPallet.setImageResource(R.drawable.check);
+                    }
 
                     return;
                 }else if (ScanValidator.IsRSNScanned(scannedData)) {
-                    if (lblSKU.getText().toString().isEmpty()) {
-                        clearFields();
-                        common.showUserDefinedAlertType(errorMessages.EMC_039, getActivity(), getContext(), "Error");
-                        return;
-                    }
-                    if (etPallet.getText().toString().isEmpty()) {
-                        common.showUserDefinedAlertType(errorMessages.EMC_0019, getActivity(), getContext(), "Error");
-                        return;
-                    }
+                    if(IsRSN!=null &&  IsRSN.equals("1")) {
+                        if (lblSKU.getText().toString().isEmpty()) {
+                            clearFields();
+                            common.showUserDefinedAlertType(errorMessages.EMC_039, getActivity(), getContext(), "Error");
+                            return;
+                        }
+                        if (etPallet.getText().toString().isEmpty()) {
+                            common.showUserDefinedAlertType(errorMessages.EMC_0019, getActivity(), getContext(), "Error");
+                            return;
+                        }
 
-                    isPrintWindowRequired = false;
-                    lblScannedBarcode.setText(scannedData);
-                    ValidateBarcodeAndConfirmPicking();
+                        isPrintWindowRequired = false;
+                        lblScannedBarcode.setText(scannedData);
+                        ValidateBarcodeAndConfirmPicking();
+                    }
                 } else {
                 common.showUserDefinedAlertType(errorMessages.EMC_0045, getActivity(), getContext(), "Error");
                 return;

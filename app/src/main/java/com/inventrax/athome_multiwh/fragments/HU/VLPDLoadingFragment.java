@@ -2,6 +2,7 @@ package com.inventrax.athome_multiwh.fragments.HU;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -41,6 +42,7 @@ import com.inventrax.athome_multiwh.common.constants.ErrorMessages;
 import com.inventrax.athome_multiwh.fragments.HomeFragment;
 import com.inventrax.athome_multiwh.interfaces.ApiInterface;
 import com.inventrax.athome_multiwh.pojos.ExecutionResponseDTO;
+import com.inventrax.athome_multiwh.pojos.ItemInfoDTO;
 import com.inventrax.athome_multiwh.pojos.OutboundDTO;
 import com.inventrax.athome_multiwh.pojos.VLPDLoadingDTO;
 import com.inventrax.athome_multiwh.pojos.VlpdDto;
@@ -48,6 +50,7 @@ import com.inventrax.athome_multiwh.pojos.WMSCoreMessage;
 import com.inventrax.athome_multiwh.pojos.WMSExceptionMessage;
 import com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner;
 import com.inventrax.athome_multiwh.services.RestService;
+import com.inventrax.athome_multiwh.util.DialogUtils;
 import com.inventrax.athome_multiwh.util.ExceptionLoggerUtils;
 import com.inventrax.athome_multiwh.util.FragmentUtils;
 import com.inventrax.athome_multiwh.util.ProgressDialogUtils;
@@ -70,7 +73,7 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
     private View rootView;
 
     private RelativeLayout rlVLPDSelect, rlVLPDLoading;
-    private TextView lblVLPDNumber, lblScannedItem, lblBoxCount;
+    private TextView lblVLPDNumber, lblScannedItem, lblBoxCount,lblPickQty,lblLoadQty,lblDesc;
     private CardView cvScan;
     private ImageView ivScan;
     private TextInputLayout txtInputLayoutQty;
@@ -94,8 +97,11 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
     private ExceptionLoggerUtils exceptionLoggerUtils;
     private String materialType = "", rsnType  = "";
     private ErrorMessages errorMessages;
+    int mmId=0;
+    String vlpdId;
 
     SharedPreferences sp;
+    String barcode="";
 
     private final BroadcastReceiver myDataReceiver = new BroadcastReceiver() {
         @Override
@@ -132,6 +138,9 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
         lblVLPDNumber = (TextView) rootView.findViewById(R.id.lblVLPDNumber);
         lblScannedItem = (TextView) rootView.findViewById(R.id.lblScannedItem);
         lblBoxCount = (TextView) rootView.findViewById(R.id.lblBoxCount);
+        lblPickQty = (TextView) rootView.findViewById(R.id.lblPickQty);
+        lblLoadQty = (TextView) rootView.findViewById(R.id.lblLoadQty);
+        lblDesc = (TextView) rootView.findViewById(R.id.lblDesc);
 
         cvScan = (CardView) rootView.findViewById(R.id.cvScan);
         ivScan = (ImageView) rootView.findViewById(R.id.ivScan);
@@ -208,15 +217,12 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
             rlVLPDSelect.setVisibility(View.GONE);
             rlVLPDLoading.setVisibility(View.VISIBLE);
 
-
             lblVLPDNumber.setText(getArguments().getString("vlpdRefNo"));
             vlpdRefNo = lblVLPDNumber.getText().toString();
             lblScannedItem.setText(getArguments().getString("RSN"));
             lblBoxCount.setText(getArguments().getString("count"));
             etQty.setText(getArguments().getString("qty"));
-
             return;
-
 
         }else {
             GetOpenRefNumberList();
@@ -350,21 +356,18 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.btnGo:
 
-                if ((vlpdRefNo=="" && vlpdRefNo==null) || vlpdRefNo=="Select") {
+                if ((vlpdRefNo=="" && vlpdRefNo==null) || vlpdRefNo.equals("Select")) {
                     common.showUserDefinedAlertType(errorMessages.EMC_0042, getActivity(), getContext(), "Error");
                     return;
-
                 } else {
-
                     GetVLPDStatus();
                 }
 
                 break;
 
             case R.id.btnExport:
-                if ((vlpdRefNo=="" && vlpdRefNo==null) || vlpdRefNo=="Select") {
+                if ((vlpdRefNo=="" && vlpdRefNo==null) || vlpdRefNo.equals("Select")) {
                     common.showUserDefinedAlertType(errorMessages.EMC_0042, getActivity(), getContext(), "Error");
-
                     return;
                 } else {
                     Bundle bundle= new Bundle();
@@ -384,7 +387,36 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
                 rlVLPDLoading.setVisibility(View.VISIBLE);
 
                 if(!lblScannedItem.getText().toString().isEmpty()){
-                    ConfirmVLPDLoading();
+                    if (barcode.split("/").length == 4 && barcode.split("/")[0].length() == 10) {
+                        ConfirmVLPDLoading();
+                    }
+                    else if (ScanValidator.IsRSNScanned(barcode))
+                    {
+                        ConfirmVLPDLoading();
+                    }
+                    else if (ScanValidator.IsMatressBundleScanned(barcode)) {
+                        ConfirmVLPDLoading();
+                    }
+                    else {
+                        if(lblScannedItem.getText().toString().isEmpty()){
+                            common.showUserDefinedAlertType("Please scan barcode", getActivity(), getActivity(), "Warning");
+                            return;
+                        }
+
+                        if(Integer.parseInt(etQty.getText().toString())<=0){
+                            common.showUserDefinedAlertType("Qty must be greater than zero", getActivity(), getActivity(), "Warning");
+                            return;
+                        }
+
+                        if((Double.parseDouble(lblPickQty.getText().toString()) - Double.parseDouble(lblLoadQty.getText().toString()))
+                                < Double.parseDouble(etQty.getText().toString())){
+                            common.showUserDefinedAlertType("Entered qty is greater than required qty", getActivity(), getActivity(), "Warning");
+                            return;
+                        }
+
+                        confirmNonRSNVLPDLoading();
+                    }
+
                 }else {
                     common.showUserDefinedAlertType(errorMessages.EMC_0046,getActivity(),getContext(),"Error");
                 }
@@ -397,8 +429,137 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void GetVLPDStatus() {
+
+    private void confirmNonRSNVLPDLoading() {
+
         try {
+
+            WMSCoreMessage message = new WMSCoreMessage();
+            message = common.SetAuthentication(EndpointConstants.ItemInfoDTO, getContext());
+            ItemInfoDTO infoDTO = new ItemInfoDTO();
+            infoDTO.setMaterialMasterId(String.valueOf(mmId));
+            infoDTO.setVlpdAssgnmentId(vlpdId);
+            infoDTO.setReqQuantity(etQty.getText().toString());
+            message.setEntityObject(infoDTO);
+
+            Call<String> call = null;
+            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
+
+            try {
+                call = apiService.ConfirmNonRSNVLPDLoading(message);
+                ProgressDialogUtils.showProgressDialog("Please Wait");
+            } catch (Exception ex) {
+                try {
+                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "ConfirmVLPDLoading_01", getActivity());
+                    logException();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ProgressDialogUtils.closeProgressDialog();
+                common.showUserDefinedAlertType(errorMessages.EMC_0002, getActivity(), getContext(), "Error");
+            }
+            try {
+                //Getting response from the method
+                call.enqueue(new Callback<String>() {
+
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        try {
+                            core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
+
+                            if ((core.getType().toString().equals("Exception"))) {
+                                List<LinkedTreeMap<?, ?>> _lExceptions = new ArrayList<LinkedTreeMap<?, ?>>();
+                                _lExceptions = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
+
+                                WMSExceptionMessage owmsExceptionMessage = null;
+                                for (int i = 0; i < _lExceptions.size(); i++) {
+                                    owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
+                                }
+
+                                ProgressDialogUtils.closeProgressDialog();
+                                common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
+
+                            } else {
+
+                                core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
+
+                                List<LinkedTreeMap<?, ?>> _lResponse = new ArrayList<LinkedTreeMap<?, ?>>();
+                                _lResponse = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
+
+                                VLPDLoadingDTO dto = null;
+                                for (int i = 0; i < _lResponse.size(); i++) {
+                                    dto = new VLPDLoadingDTO(_lResponse.get(i).entrySet());
+                                }
+                                ProgressDialogUtils.closeProgressDialog();
+                                if (dto.getStatus()) {
+
+                                    Common.setIsPopupActive(true);
+                                    new SoundUtils().alertSuccess(getActivity(), getActivity());
+                                    DialogUtils.showAlertDialog(getActivity(), "Success", dto.getMessage(), R.drawable.success,new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            switch (which) {
+                                                case DialogInterface.BUTTON_POSITIVE:
+                                                    etQty.setText("");
+                                                    getNONRSNSKULoadingInfo(lblScannedItem.getText().toString());
+                                                    Common.setIsPopupActive(false);
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                }else{
+                                    common.showUserDefinedAlertType(dto.getMessage(), getActivity(), getContext(),"Warning");
+                                }
+
+                            }
+
+                        } catch (Exception ex) {
+                            try {
+                                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "ConfirmVLPDLoading_02", getActivity());
+                                logException();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            ProgressDialogUtils.closeProgressDialog();
+                        }
+                    }
+
+                    // response object fails
+                    @Override
+                    public void onFailure(Call<String> call, Throwable throwable) {
+                        //Toast.makeText(LoginActivity.this, throwable.toString(), Toast.LENGTH_LONG).show();
+                        ProgressDialogUtils.closeProgressDialog();
+                        common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
+                    }
+                });
+            } catch (Exception ex) {
+                try {
+                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "ConfirmVLPDLoading_03", getActivity());
+                    logException();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ProgressDialogUtils.closeProgressDialog();
+                common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
+            }
+        } catch (Exception ex) {
+            try {
+                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "ConfirmVLPDLoading_04", getActivity());
+                logException();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ProgressDialogUtils.closeProgressDialog();
+            common.showUserDefinedAlertType(errorMessages.EMC_0003, getActivity(), getContext(), "Error");
+        }
+
+    }
+
+    private void GetVLPDStatus() {
+
+        try {
+
             WMSCoreMessage message = new WMSCoreMessage();
             message = common.SetAuthentication(EndpointConstants.VLPDDTO, getContext());
             VlpdDto vlpdDto = new VlpdDto();
@@ -406,8 +567,7 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
             message.setEntityObject(vlpdDto);
 
             Call<String> call = null;
-            ApiInterface apiService =
-                    RestService.getClient().create(ApiInterface.class);
+            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
             try {
                 call = apiService.GetVLPDStatus(message);
                 ProgressDialogUtils.showProgressDialog("Please Wait");
@@ -461,6 +621,7 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
                                     rlVLPDLoading.setVisibility(View.VISIBLE);
                                     rlVLPDSelect.setVisibility(View.GONE);
                                     lblVLPDNumber.setText(vlpdRefNo);
+                                    vlpdId =dto.getiD();
                                     ProgressDialogUtils.closeProgressDialog();
                                 }
 
@@ -516,6 +677,11 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
         btnSubmit.setTextColor(getResources().getColor(R.color.black));
         btnSubmit.setBackgroundResource(R.drawable.button_hide);
         lblScannedItem.setText("");
+        lblScannedItem.setText("");
+        lblDesc.setText("");
+        lblPickQty.setText("");
+        lblLoadQty.setText("");
+        etQty.setText("");
     }
 
 
@@ -587,32 +753,44 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
 
     //Assigning scanned value to the respective fields
     public void ProcessScannedinfo(String scannedData) {
-        if (scannedData != null && !common.isPopupActive()) {
+        if (scannedData != null && !Common.isPopupActive()) {
 
             if(!ProgressDialogUtils.isProgressActive()) {
 
            /* if (rlVLPDLoading.getVisibility() == View.VISIBLE) {
                 lblVLPDNumber.setText(scannedData);
             }*/
-
+                barcode=scannedData;
+                btnSubmit.setEnabled(false);
+                btnSubmit.setTextColor(getResources().getColor(R.color.black));
+                btnSubmit.setBackgroundResource(R.drawable.button_hide);
+                btnExport.setVisibility(View.VISIBLE);
                 if (scannedData.split("/").length == 4 && scannedData.split("/")[0].length() == 10) {
                     etQty.setText("0");
                     lblScannedItem.setText(scannedData);
                     ConfirmVLPDLoading();
-                } else if (scanValidator.IsRSNScanned(scannedData))
+                }
+                else if (ScanValidator.IsRSNScanned(scannedData))
                 //else if (scannedData.Length == 17 && scannedData.Substring(0, 1) == "A")
                 {
                     etQty.setText("0");
                     lblScannedItem.setText(scannedData);
                     ConfirmVLPDLoading();
-                } else if (ScanValidator.IsMatressBundleScanned(scannedData)) {
+                }
+                else if (ScanValidator.IsMatressBundleScanned(scannedData)) {
                     lblScannedItem.setText(scannedData);
                     confirmMatressBunle(scannedData);
-                } else {
-                    common.showUserDefinedAlertType(errorMessages.EMC_0045, getActivity(), getContext(), "Error");
+                }
+                else {
+                    btnExport.setVisibility(View.INVISIBLE);
+                    btnSubmit.setEnabled(true);
+                    btnSubmit.setTextColor(getResources().getColor(R.color.white));
+                    btnSubmit.setBackgroundResource(R.drawable.button_shape);
+                    getNONRSNSKULoadingInfo(scannedData);
+                    //common.showUserDefinedAlertType(errorMessages.EMC_0045, getActivity(), getContext(), "Error");
                 }
             }else {
-                if(!common.isPopupActive())
+                if(!Common.isPopupActive())
                 {
                     common.showUserDefinedAlertType(errorMessages.EMC_081, getActivity(), getContext(), "Error");
 
@@ -621,6 +799,112 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
 
             }
         }
+    }
+
+
+    private void getNONRSNSKULoadingInfo(String scannedCode) {
+
+        try {
+
+            WMSCoreMessage message = new WMSCoreMessage();
+            message = common.SetAuthentication(EndpointConstants.ItemInfoDTO, getContext());
+            ItemInfoDTO itemInfoDTO = new ItemInfoDTO();
+            itemInfoDTO.setVlpdAssgnmentId(vlpdId);
+            itemInfoDTO.setMcode(scannedCode);
+            message.setEntityObject(itemInfoDTO);
+
+            Call<String> call = null;
+            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
+
+            try {
+                call = apiService.getNONRSNSKULoadingInfo(message);
+                ProgressDialogUtils.showProgressDialog("Please Wait");
+
+            } catch (Exception ex) {
+                try {
+                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetOpenRefNumberList_01", getActivity());
+                    logException();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ProgressDialogUtils.closeProgressDialog();
+                common.showUserDefinedAlertType(errorMessages.EMC_0002, getActivity(), getContext(), "Error");
+            }
+            try {
+                //Getting response from the method
+                call.enqueue(new Callback<String>() {
+
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        try {
+                            core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
+                            if ((core.getType().toString().equals("Exception"))) {
+                                List<LinkedTreeMap<?, ?>> _lExceptions = new ArrayList<LinkedTreeMap<?, ?>>();
+                                _lExceptions = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
+
+                                WMSExceptionMessage owmsExceptionMessage = null;
+                                for (int i = 0; i < _lExceptions.size(); i++) {
+                                    owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
+                                }
+                                ProgressDialogUtils.closeProgressDialog();
+                                common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
+                            } else {
+
+                                core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
+
+                                LinkedTreeMap<String, String> _lstItemInfo = new LinkedTreeMap<String, String>();
+                                _lstItemInfo =(LinkedTreeMap<String, String>) core.getEntityObject();
+                                ItemInfoDTO dto = null;
+                                dto = new ItemInfoDTO(_lstItemInfo.entrySet());
+                                if(dto!=null){
+                                    lblScannedItem.setText(dto.getMcode());
+                                    lblPickQty.setText(dto.getPickedQuantity());
+                                    lblLoadQty.setText(dto.getPendingQuantity());
+                                    lblDesc.setText(dto.getDescription());
+                                    mmId = Integer.parseInt(dto.getMaterialMasterId());
+                                }
+                                ProgressDialogUtils.closeProgressDialog();
+                            }
+                        } catch (Exception ex) {
+                            try {
+                                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetOpenRefNumberList_02", getActivity());
+                                logException();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            ProgressDialogUtils.closeProgressDialog();
+                        }
+                    }
+
+                    // response object fails
+                    @Override
+                    public void onFailure(Call<String> call, Throwable throwable) {
+                        //Toast.makeText(LoginActivity.this, throwable.toString(), Toast.LENGTH_LONG).show();
+                        ProgressDialogUtils.closeProgressDialog();
+                        common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
+                    }
+                });
+            } catch (Exception ex) {
+                try {
+                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetOpenRefNumberList_03", getActivity());
+                    logException();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ProgressDialogUtils.closeProgressDialog();
+                common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
+            }
+        } catch (Exception ex) {
+            try {
+                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetOpenRefNumberList_04", getActivity());
+                logException();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ProgressDialogUtils.closeProgressDialog();
+            common.showUserDefinedAlertType(errorMessages.EMC_0003, getActivity(), getContext(), "Alert");
+        }
+
     }
 
 
