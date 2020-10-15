@@ -11,56 +11,82 @@ import java.util.Set;
  */
 
 public class CycleCountDTO implements Serializable{
+
     @SerializedName("UserId")
     private String userId;
+
     @SerializedName("Location")
     private String location;
+
     @SerializedName("BoxQty")
     private String boxQty;
+
     @SerializedName("IsSatisfiedBoxQty")
     private Boolean isSatisfiedBoxQty;
+
     @SerializedName("SerialNo")
     private String serialNo;
+
     @SerializedName("MRP")
     private String MRP;
+
     @SerializedName("MOP")
     private String MOP;
+
     @SerializedName("MaterialCode")
     private String materialCode;
+
     @SerializedName("BatchNo")
     private String batchNo;
+
     @SerializedName("SelectedCCName")
     private String SelectedCCName;
+
     @SerializedName("SLOC")
     private String SLOC;
+
     @SerializedName("SelectedColorCode")
     private String SelectedColorCode;
+
     @SerializedName("Result")
     private String Result;
+
     @SerializedName("UserConfirmReDo")
     private Boolean UserConfirmReDo;
+
     @SerializedName("IsEANScanned")
     private Boolean IsEANScanned;
+
     @SerializedName("IsEANSpecified")
     private Boolean IsEANSpecified;
+
     @SerializedName("MaterialType")
     private String MaterialType;
+
     @SerializedName("MDesc")
     private String MDesc;
+
     @SerializedName("Barcode")
     private String barcode;
+
     @SerializedName("WMSQty")
     private String WMSQty;
+
     @SerializedName("CCQty")
     private String CCQty;
+
     @SerializedName("MaterialMasterId")
     private String materialMasterId;
+
     @SerializedName("LogicalBincount")
     private String logicalBincount;
+
     @SerializedName("PhysicalBinCount")
     private String physicalBinCount;
+
     @SerializedName("HUNumber")
     private String HUNumber;
+
     @SerializedName("HUsize")
     private String HUsize;
 

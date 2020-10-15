@@ -113,7 +113,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
     private ErrorMessages errorMessages;
     private String mCodeWithSupplier = "";
 
-
     private boolean isMaxVolumeReached = false;
     private boolean isMaxWeightReached = false;
     private boolean IsPalletLoading = false;
@@ -135,6 +134,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
     private LinearLayout llRTRBarcodeScan;
     private Button btnSubmit;
     private EditText etHuSize, etHuNum, etQuantity;
+    List<String> lstStorageLoc;
 
     private final BroadcastReceiver myDataReceiver = new BroadcastReceiver() {
         @Override
@@ -246,7 +246,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     //SAVE THE DATA
-
                 } else {
                     getPrintDetails();
                 }
@@ -260,6 +259,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 storageloc = spinnerSelectSloc.getSelectedItem().toString();
+                Log.v("storageloc",storageloc);
             }
 
             @Override
@@ -400,7 +400,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         });
 
 
-        /*GetStorageLocations();*/
+        GetStorageLocations();
 
     }
 
@@ -615,7 +615,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                 // checking for location scan
                 if (etLocation.getText().toString().isEmpty()) {
 
-                    if (scanValidator.IsLocationScanned(scannedData)) {
+                    if (ScanValidator.IsLocationScanned(scannedData)) {
                         etLocation.setText(scannedData.substring(0, 7));
                         GetLocationType();
                         return;
@@ -628,7 +628,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                 // Check for Pallet if in case scanned location is receiving bin zone
                 if (etPallet.isEnabled()) {
                     if (etPallet.getText().toString().isEmpty()) {
-                        if (scanValidator.IsPalletScanned(scannedData)) {
+                        if (ScanValidator.IsPalletScanned(scannedData)) {
                             etPallet.requestFocus();
                             etPallet.setText(scannedData);
                             etLocation.requestFocus();
@@ -714,7 +714,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                 }
             } else {
                 soundUtils.alertWarning(getActivity(), getContext());
-
             }
 
 
@@ -728,7 +727,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         }
 
     }
-
 
     public void GetPalletinformation() {
 
@@ -746,8 +744,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
 
             Call<String> call = null;
-            ApiInterface apiService =
-                    RestService.getClient().create(ApiInterface.class);
+            ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
 
             try {
                 //Checking for Internet Connectivity
@@ -905,7 +902,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         }
     }
 
-
     public void ClosePallet() {
 
         if (etPallet.getText().toString().isEmpty()) {
@@ -1036,14 +1032,14 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                             lblPrintScannedSku.setText(inboundDTO.getMaterialCode());
                                             lblPrintSKUDesc.setText(inboundDTO.getmDesc());
+
                                         } else {
 
                                             etRSNPrint.setFocusable(true);
                                             etRSNPrint.setText("");
-
                                             common.showUserDefinedAlertType(errorMessages.EMC_0045, getActivity(), getContext(), "Warning");
-
                                             return;
+
                                         }
 
                                     } else {
@@ -1292,7 +1288,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                     RestService.getClient().create(ApiInterface.class);
 
             try {
-                //Checking for Internet Connectivity
+                // Checking for Internet Connectivity
                 // if (NetworkUtils.isInternetAvailable()) {
                 // Calling the Interface method
                 call = apiService.UpdateLBH(message);
@@ -1300,7 +1296,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                 // } else {
                 // DialogUtils.showAlertDialog(getActivity(), "Please enable internet");
                 // return;
-
                 // }
 
             } catch (Exception ex) {
@@ -1330,10 +1325,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                 WMSExceptionMessage owmsExceptionMessage = null;
                                 for (int i = 0; i < _lExceptions.size(); i++) {
-
                                     owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-
-
                                 }
                                 ProgressDialogUtils.closeProgressDialog();
                                 common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
@@ -1348,10 +1340,8 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 if (_lDimensions != null) {
                                     InboundDTO oInboundDTO = null;
                                     for (int i = 0; i < _lDimensions.size(); i++) {
-
                                         oInboundDTO = new InboundDTO(_lDimensions.get(i).entrySet());
                                         lstDto.add(oInboundDTO);
-
                                     }
 
                                     common.showUserDefinedAlertType(errorMessages.EMC_0014, getActivity(), getContext(), "Success");
@@ -1504,10 +1494,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                 WMSExceptionMessage owmsExceptionMessage = null;
                                 for (int i = 0; i < _lExceptions.size(); i++) {
-
                                     owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-
-
                                 }
                                 ProgressDialogUtils.closeProgressDialog();
                                 common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
@@ -1588,6 +1575,18 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
     }
 
     public void GetStorageLocations() {
+        lstStorageLoc = new ArrayList<>();
+        lstStorageLoc.add("Select");
+        lstStorageLoc.add("HEST");
+        lstStorageLoc.add("HIST");
+
+        ArrayAdapter arrayAdapterSLoc = new ArrayAdapter(getActivity(), R.layout.support_simple_spinner_dropdown_item, lstStorageLoc);
+        spinnerSelectSloc.setAdapter(arrayAdapterSLoc);
+        spinnerSelectSloc.setSelection(0,true);
+
+    }
+
+/*    public void GetStorageLocations() {
 
         try {
 
@@ -1643,10 +1642,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                 WMSExceptionMessage owmsExceptionMessage = null;
                                 for (int i = 0; i < _lExceptions.size(); i++) {
-
                                     owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-
-
                                 }
                                 ProgressDialogUtils.closeProgressDialog();
                                 common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
@@ -1670,7 +1666,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     lstStorageLoc.add(lstDto.get(i).getSLOCcode());
                                     if (lstDto.get(i).getIsDefault().equals("True")) {
                                         DefaultSloc = lstDto.get(i).getSLOCcode();
-
                                     }
                                 }
 
@@ -1724,7 +1719,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             ProgressDialogUtils.closeProgressDialog();
             common.showUserDefinedAlertType(errorMessages.EMC_0003, getActivity(), getContext(), "Error");
         }
-    }
+    }*/
 
     public void ValidateWeightAndVolume(InboundDTO oInboundDTO) {
 
@@ -1765,8 +1760,11 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             inboundDTO.setLocation(etLocation.getText().toString());
             inboundDTO.setUniqueRSN(etRSN.getText().toString());
             inboundDTO.setPalletNo(etPallet.getText().toString());
-           // inboundDTO.setSelectedStorageLocation(storageloc);
-            inboundDTO.setSelectedStorageLocation("");
+            if(storageloc.equals("Select"))
+                 inboundDTO.setSelectedStorageLocation("");
+            else
+                inboundDTO.setSelectedStorageLocation(storageloc);
+            //inboundDTO.setSelectedStorageLocation("");
             inboundDTO.setStoreRefNo(lblStoreRefNo.getText().toString());
             inboundDTO.setItemSerialNo(etCase.getText().toString());
             message.setEntityObject(inboundDTO);
@@ -1776,15 +1774,15 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
 
             try {
-                //Checking for Internet Connectivity
+
+                // Checking for Internet Connectivity
                 // if (NetworkUtils.isInternetAvailable()) {
-                // Calling the Interface method
+                //     Calling the Interface method
                 call = apiService.ConfirmReceiptOnUniqueRSNScan(message);
                 ProgressDialogUtils.showProgressDialog("Please Wait");
                 // } else {
-                // DialogUtils.showAlertDialog(getActivity(), "Please enable internet");
-                // return;
-
+                //     DialogUtils.showAlertDialog(getActivity(), "Please enable internet");
+                //     return;
                 // }
 
             } catch (Exception ex) {
@@ -1876,6 +1874,9 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     }
                                 }
 
+                                ArrayAdapter arrayAdapterSLoc = new ArrayAdapter(getActivity(), R.layout.support_simple_spinner_dropdown_item, lstStorageLoc);
+                                spinnerSelectSloc.setAdapter(arrayAdapterSLoc);
+                                spinnerSelectSloc.setSelection(0,true);
 
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                 ivScanSku.setImageResource(R.drawable.check);
@@ -1940,7 +1941,10 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             inboundDTO.setMaterialCode(mCodeWithSupplier);
             inboundDTO.setPalletNo(etPallet.getText().toString());
            // inboundDTO.setSelectedStorageLocation(storageloc);
-            inboundDTO.setSelectedStorageLocation(etSloc.getText().toString());
+            if(storageloc.equals("Select"))
+                inboundDTO.setSelectedStorageLocation("");
+            else
+                inboundDTO.setSelectedStorageLocation(storageloc);
             inboundDTO.setStoreRefNo(lblStoreRefNo.getText().toString());
             inboundDTO.setItemSerialNo(etCase.getText().toString());
             inboundDTO.setHUNumber(etHuNum.getText().toString());
@@ -2050,6 +2054,10 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     }
                                 }
 
+                                ArrayAdapter arrayAdapterSLoc = new ArrayAdapter(getActivity(), R.layout.support_simple_spinner_dropdown_item, lstStorageLoc);
+                                spinnerSelectSloc.setAdapter(arrayAdapterSLoc);
+                                spinnerSelectSloc.setSelection(0,true);
+
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                 ivScanSku.setImageResource(R.drawable.check);
                                 ProgressDialogUtils.closeProgressDialog();
@@ -2121,7 +2129,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             ApiInterface apiService = RestService.getClient().create(ApiInterface.class);
 
             try {
-                //Checking for Internet Connectivity
+                // Checking for Internet Connectivity
                 // if (NetworkUtils.isInternetAvailable()) {
                 // Calling the Interface method
                 call = apiService.getSKUDeatilsWithSupplierInvoice(message);
@@ -2151,8 +2159,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                         try {
 
-                            Log.v("SKUDeatils",new Gson().toJson(core));
-
                             core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
                             if ((core.getType().toString().equals("Exception"))) {
                                 List<LinkedTreeMap<?, ?>> _lExceptions = new ArrayList<LinkedTreeMap<?, ?>>();
@@ -2160,13 +2166,10 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                                 WMSExceptionMessage owmsExceptionMessage = null;
                                 for (int i = 0; i < _lExceptions.size(); i++) {
-
                                     owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-
-
                                 }
-                                ProgressDialogUtils.closeProgressDialog();
 
+                                ProgressDialogUtils.closeProgressDialog();
 
                                 txtInputLayoutRSN.setHint(getString(R.string.hintRSN));
                                 llRTRBarcodeScan.setVisibility(View.INVISIBLE);
@@ -2201,6 +2204,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 etCase.setText(oInboundData.getSerialNo());
                                 etHuSize.setText(oInboundData.getHUsize());
                                // etHuNum.setText(oInboundData.getHUNumber());
+
                                 ProgressDialogUtils.closeProgressDialog();
                                 if (oInboundData.getDimensionsDTO().get(0).getLength().equals("0") || oInboundData.getDimensionsDTO().get(0).getLength().equalsIgnoreCase("0.00")) {
                                     etLength.setEnabled(true);
