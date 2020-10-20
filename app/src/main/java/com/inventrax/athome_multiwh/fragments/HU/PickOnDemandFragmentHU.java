@@ -1225,7 +1225,7 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
                 etQty.setEnabled(false);
                 btnPick.setTextColor(getResources().getColor(R.color.black));
                 btnPick.setBackgroundResource(R.drawable.button_hide);
-                if(IsRSN.equals("0")){
+                if(IsRSN!=null && IsRSN.equals("0")){
                     etQty.setText("");
                     etQty.setEnabled(true);
                     btnPick.setEnabled(true);

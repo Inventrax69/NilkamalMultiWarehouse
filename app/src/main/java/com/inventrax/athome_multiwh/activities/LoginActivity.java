@@ -115,6 +115,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Adapt
     String serviceUrlString = null;
     ServiceURL serviceURL;
 
+    /// APP UPDATE------------
+
     String versionName = "";
     int versionCode=0;
     private String APK_URL = "";
@@ -275,6 +277,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Adapt
         }
     }
 
+
+    //------------- APP UPDATE
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -316,7 +321,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Adapt
             txtReleaseDate = (TextView) findViewById(R.id.txtDate);
             txtVersion = (TextView) findViewById(R.id.txtVersionName);
             txtVersion.setText("Version:" + " " + AndroidUtils.getVersionName().toString());
-            txtReleaseDate.setText("Release Date:" + " " + "18-09-2020");
+            txtReleaseDate.setText("Release Date:" + " " + "19-10-2020");
 
             spinnerSelectDivision = (SearchableSpinner) findViewById(R.id.spinnerSelectDivision);
 

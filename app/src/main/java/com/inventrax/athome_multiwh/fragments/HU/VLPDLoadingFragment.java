@@ -753,6 +753,7 @@ public class VLPDLoadingFragment extends Fragment implements View.OnClickListene
 
     //Assigning scanned value to the respective fields
     public void ProcessScannedinfo(String scannedData) {
+
         if (scannedData != null && !Common.isPopupActive()) {
 
             if(!ProgressDialogUtils.isProgressActive()) {
