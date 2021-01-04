@@ -79,13 +79,13 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
     private View rootView;
 
     private RelativeLayout rlReceive, rlPrint;
-    private TextView lblStoreRefNo, lblInboundQty, lblScannedSku, lblDesc, lblPrintScannedSku, lblPrintSKUDesc;
+    private TextView lblStoreRefNo, lblInboundQty, lblScannedSku, lblDesc, lblPrintScannedSku, lblPrintSKUDesc,lblPO_SLOC;
     private CardView cvScanPallet, cvScanLocation, cvScanSku, cvScanRSN;
     private ImageView ivScanPallet, ivScanLocation, ivScanSku, ivScanRSN;
     private TextInputLayout txtInputLayoutPallet, txtInputLayoutLocation, txtInputLayoutRSN,
             txtInputLayoutLength, txtInputLayoutBreadth, txtInputLayoutHeight, txtInputLayoutWeight, txtInputLayoutBox,
             txtInputLayoutQty, txtInputLayoutVolume, txtInputLayoutTweight, txtInputLayoutCase, txtInputLayoutRSNPrint,
-            txtInputLayoutStackCount, txtInputLayoutPrintQty, txtInputLayoutPrinterIP;
+            txtInputLayoutStackCount, txtInputLayoutPrintQty, txtInputLayoutPrinterIP,txtInputLayoutQunatity;
     private CustomEditText etPallet, etLocation, etRSN, etLength, etBreadth, etHeight,
             etWeight, etBox, etQty, etVolume, etTweight, etCase,etSloc;
 
@@ -129,7 +129,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
     public String auditbinLocation = null;
 
     private String pallet = null, location = null, rsn = null, L = null, B = null, H = null,
-            W = null, box = null, qty = null, vol = null, twt = null, caseString = null, sku = null, desc = null, count = null, ipAddress = null, printerIPAddress = null;
+            W = null, box = null, qty = null, vol = null, twt = null, caseString = null, sku = null, desc = null, po_sloc = null, count = null, ipAddress = null, printerIPAddress = null;
 
     private LinearLayout llRTRBarcodeScan;
     private Button btnSubmit;
@@ -173,6 +173,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         lblDesc = (TextView) rootView.findViewById(R.id.lblDesc);
         lblPrintScannedSku = (TextView) rootView.findViewById(R.id.lblPrintScannedSku);
         lblPrintSKUDesc = (TextView) rootView.findViewById(R.id.lblPrintSKUDesc);
+        lblPO_SLOC = (TextView) rootView.findViewById(R.id.lblPO_SLOC);
 
         cvScanPallet = (CardView) rootView.findViewById(R.id.cvScanPallet);
         cvScanLocation = (CardView) rootView.findViewById(R.id.cvScanLocation);
@@ -200,6 +201,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         txtInputLayoutStackCount = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutStackCount);
         txtInputLayoutPrintQty = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutPrintQty);
         txtInputLayoutPrinterIP = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutPrinterIP);
+        txtInputLayoutQunatity = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutQunatity);
 
         etPallet = (CustomEditText) rootView.findViewById(R.id.etPallet);
         etPallet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -240,7 +242,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         etPrintQty = (EditText) rootView.findViewById(R.id.etPrintQty);
         etPrinterIP = (EditText) rootView.findViewById(R.id.etPrinterIP);
 
-
         etRSNPrint.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             public void onFocusChange(View v, boolean hasFocus) {
@@ -252,7 +253,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
             }
         });
-
 
         spinnerSelectSloc = (SearchableSpinner) rootView.findViewById(R.id.spinnerSelectSloc);
         spinnerSelectSloc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -325,6 +325,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             sku = getArguments().getString("sku");
             desc = getArguments().getString("desc");
             count = getArguments().getString("count");
+            po_sloc = getArguments().getString("posloc");
 
 
             etPallet.setText(pallet);
@@ -342,6 +343,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             lblScannedSku.setText(sku);
             lblDesc.setText(desc);
             lblInboundQty.setText(count);
+            lblPO_SLOC.setText(po_sloc);
 
             if (!etPallet.getText().toString().isEmpty()) {
 
@@ -359,7 +361,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                 ivScanSku.setImageResource(R.drawable.check);
             }
-
 
         }
 
@@ -398,7 +399,6 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                 }
             }
         });
-
 
         GetStorageLocations();
 
@@ -495,9 +495,11 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
         bundle.putString("sku", lblScannedSku.getText().toString());
         bundle.putString("desc", lblDesc.getText().toString());
         bundle.putString("count", lblInboundQty.getText().toString());
+        bundle.putString("posloc", lblPO_SLOC.getText().toString());
         bundle.putBoolean("IsLocationEnabled", etLocation.isEnabled());
         bundle.putBoolean("IsPalletEnabled", etPallet.isEnabled());
         bundle.putBoolean("IsReceivingBin", IsReceivingBin);
+
 
 
         PendingInboundListFragment pendingInboundListFragment = new PendingInboundListFragment();
@@ -678,7 +680,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
                     txtInputLayoutRSN.setHint("Barcode");
                     btnExport.setVisibility(View.GONE);
-                    btnSubmit.setVisibility(View.INVISIBLE);
+                    btnSubmit.setVisibility(View.VISIBLE);
                     llRTRBarcodeScan.setVisibility(View.VISIBLE);
                     btnConfirmLBH.setVisibility(View.INVISIBLE);
                     mCodeWithSupplier = scannedData;
@@ -843,7 +845,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 if (oPalletInfo != null) {
                                     etPallet.setEnabled(false);
                                     spinnerSelectSloc.setEnabled(false);
-                                    lblInboundQty.setText(oPalletInfo.getNoOfBoxesLoaded());
+                                    lblInboundQty.setText("Count:" + " " + oPalletInfo.getNoOfBoxesLoaded());
                                     etVolume.setText(oPalletInfo.getLoadedVolume());
                                     etWeight.setText(oPalletInfo.getLoadedWeight());
                                     InboundDTO oInbound = new InboundDTO();
@@ -926,6 +928,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
 
         etQty.setText("");
         lblInboundQty.setText("");
+        lblPO_SLOC.setText("");
         isMaxVolumeReached = false;
         isMaxVolumeReached = false;
         palletMaxWeight = 0;
@@ -1841,7 +1844,8 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 etBreadth.setText(oInboundData.getDimensionsDTO().get(0).getBreadth());
                                 etHeight.setText(oInboundData.getDimensionsDTO().get(0).getHeight());
                                 etWeight.setText(oInboundData.getDimensionsDTO().get(0).getWeight());
-                                lblInboundQty.setText(oInboundData.getPalletInfoDTO().get(0).getNoOfBoxesLoaded());
+                                lblInboundQty.setText("Count:" + " " + oInboundData.getPalletInfoDTO().get(0).getNoOfBoxesLoaded());
+                                lblPO_SLOC.setText("PO Sloc:" + " " + oInboundData.getSelectedStorageLocation());
                                 etVolume.setText(oInboundData.getPalletInfoDTO().get(0).getLoadedVolume());
                                 etTweight.setText(oInboundData.getPalletInfoDTO().get(0).getLoadedWeight());
                                 MaterialMasterId = oInboundData.getMaterialMasterId();
@@ -1948,7 +1952,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
             inboundDTO.setStoreRefNo(lblStoreRefNo.getText().toString());
             inboundDTO.setItemSerialNo(etCase.getText().toString());
             inboundDTO.setHUNumber(etHuNum.getText().toString());
-            inboundDTO.setReceivedQty("1");
+            inboundDTO.setReceivedQty(etQuantity.getText().toString());
             message.setEntityObject(inboundDTO);
 
 
@@ -2000,6 +2004,9 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 ProgressDialogUtils.closeProgressDialog();
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                 ivScanSku.setImageResource(R.drawable.warning_img);
+                                txtInputLayoutQunatity.setVisibility(View.GONE);
+                                etQuantity.setText("");
+                                btnSubmit.setVisibility(View.GONE);
                                 common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
                             } else {
                                 core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
@@ -2013,6 +2020,9 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     oInboundDataDTO = oInboundData;
                                 }
 
+                                txtInputLayoutQunatity.setVisibility(View.GONE);
+                                etQuantity.setText("");
+                                btnSubmit.setVisibility(View.GONE);
                                 lblScannedSku.setText("SKU: " + oInboundData.getMaterialCode() + "|" + "Batch: " + oInboundData.getBatchNo());
                                 lblDesc.setText("Desc. : " + oInboundData.getmDesc());
                                 etBox.setText(oInboundData.getHUNumber() + "/" + oInboundData.getHUsize());
@@ -2021,7 +2031,8 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 etBreadth.setText(oInboundData.getDimensionsDTO().get(0).getBreadth());
                                 etHeight.setText(oInboundData.getDimensionsDTO().get(0).getHeight());
                                 etWeight.setText(oInboundData.getDimensionsDTO().get(0).getWeight());
-                                lblInboundQty.setText(oInboundData.getPalletInfoDTO().get(0).getNoOfBoxesLoaded());
+                                lblInboundQty.setText("Count:" + " " + oInboundData.getPalletInfoDTO().get(0).getNoOfBoxesLoaded());
+                                lblPO_SLOC.setText("PO Sloc:" + " " + oInboundData.getSelectedStorageLocation());
                                 etVolume.setText(oInboundData.getPalletInfoDTO().get(0).getLoadedVolume());
                                 etTweight.setText(oInboundData.getPalletInfoDTO().get(0).getLoadedWeight());
                                 MaterialMasterId = oInboundData.getMaterialMasterId();
@@ -2029,7 +2040,7 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                 etHuNum.setText(oInboundData.getHUNumber());
                                 etHuSize.setText(oInboundData.getHUsize());
                                 etSloc.setText(oInboundData.getSelectedStorageLocation());
-
+                                lblPO_SLOC.setText("PO Sloc:" + " " + oInboundData.getSelectedStorageLocation());
                                 if (oInboundData.getDimensionsDTO().get(0).getLength().equals("0") || oInboundData.getDimensionsDTO().get(0).getLength().equalsIgnoreCase("0.00")) {
                                     etLength.setEnabled(true);
                                     etBreadth.setEnabled(true);
@@ -2221,9 +2232,10 @@ public class RSNGoodsFragmentHU extends Fragment implements View.OnClickListener
                                     etHeight.setEnabled(false);
                                     etWeight.setEnabled(false);
                                     btnConfirmLBH.setEnabled(false);
+                                    txtInputLayoutQunatity.setVisibility(View.VISIBLE);
                                     btnConfirmLBH.setTextColor(getResources().getColor(R.color.black));
                                     btnConfirmLBH.setBackgroundResource(R.drawable.button_hide);
-                                    insertSKUDeatilsWithSupplierInvoice();
+                                    //insertSKUDeatilsWithSupplierInvoice();
                                 }
 
                                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));

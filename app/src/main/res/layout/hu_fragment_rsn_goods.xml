@@ -36,33 +36,33 @@
 
                 <TextView
                     android:id="@+id/lblStoreRefNo"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
+                    android:layout_weight="1"
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvCount"
-                    android:layout_width="match_parent"
+                    android:id="@+id/lblPO_SLOC"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:gravity="right"
-                    android:text="Count:"
-                    android:textColor="@color/black"
+                    android:textColor="@color/rsnColor"
+                    android:layout_weight="1"
+                    android:gravity="center"
                     android:textSize="12sp"
-                    android:textStyle="italic|bold" />
+                    android:textStyle="bold" />
+
 
                 <TextView
                     android:id="@+id/lblInboundQty"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.1"
+                    android:layout_weight="1"
                     android:textColor="@color/colorAccent"
                     android:textSize="12sp"
                     android:gravity="right"
-                    android:textStyle="italic|bold" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -558,7 +558,7 @@
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/txtInputLayoutQunatity"
                         android:layout_width="0dp"
-                        android:visibility="invisible"
+                        android:visibility="gone"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 
@@ -585,6 +585,8 @@
                 android:orientation="vertical"
                 android:weightSum="2">
 
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -592,6 +594,8 @@
                     android:gravity="bottom"
                     android:orientation="horizontal"
                     android:weightSum="3">
+
+
 
                     <Button
                         android:id="@+id/btnPalletClose"
@@ -650,6 +654,8 @@
                     android:layout_weight="0.6"
                     android:gravity="center|bottom"
                     android:orientation="horizontal">
+
+
 
                     <Button
                         android:id="@+id/btnClose"

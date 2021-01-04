@@ -75,6 +75,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener{
             txtYouTubeLink=(TextView)rootView.findViewById(R.id.txtYouTubeLink);
             txtYouTubeLink.setOnClickListener(this);
             txtYouTubeLink.setVisibility(View.GONE);
+
             //txtLocation=(TextView)rootView.findViewById(R.id.txtLocation);
             //txtLocation.setVisibility(TextView.GONE);
 
@@ -83,7 +84,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener{
 
             lblReleaseDate=(TextView) rootView.findViewById(R.id.lblReleaseDate);
             txtReleaseDate=(TextView)rootView.findViewById(R.id.txtReleaseDate);
-            txtReleaseDate.setText("19-10-2020");
+            txtReleaseDate.setText("10-11-2020");
 
         }catch (Exception ex){
             Log.d(AboutFragment.class.getName(), ex.toString());

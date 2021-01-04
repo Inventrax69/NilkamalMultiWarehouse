@@ -128,7 +128,7 @@
     <string name="title_activity_loading">Loading</string>
     <string name="title_activity_housekeeping">House Keeping</string>
     <string name="title_activity_unloading">Unloading</string>
-    <string name="title_activity_rsngooods">RSN Goods</string>
+    <string name="title_activity_rsngooods">RSN/Non RSN</string>
     <string name="title_activity_print">Print</string>
     <string name="title_activity_rsn_tracking">RSN Tracking</string>
     <string name="title_activity_box_loading_hh">Box Loading</string>

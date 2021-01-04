@@ -15,6 +15,8 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -42,6 +44,7 @@ import com.inventrax.athome_multiwh.pojos.InternalTransferDTO;
 import com.inventrax.athome_multiwh.pojos.VlpdDto;
 import com.inventrax.athome_multiwh.pojos.WMSCoreMessage;
 import com.inventrax.athome_multiwh.pojos.WMSExceptionMessage;
+import com.inventrax.athome_multiwh.searchableSpinner.SearchableSpinner;
 import com.inventrax.athome_multiwh.services.RestService;
 import com.inventrax.athome_multiwh.util.CustomEditText;
 import com.inventrax.athome_multiwh.util.ExceptionLoggerUtils;
@@ -66,12 +69,13 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
     private View rootView;
 
     private RelativeLayout rlVLPDEnter, rlMap;
-    private TextView lblSuggestedDoc;
+    private TextView lblSuggestedDoc,txtVLPD;
     private CardView cvScanDockLocation, cvScanPallet;
     private ImageView ivScanDockLocation, ivScanPallet;
     private TextInputLayout txtInputLayoutPallet, txtInputLayoutVLPD, txtInputLayoutDock;
-    private CustomEditText etPallet, etVLPD, etDock;
+    private CustomEditText etPallet, etDock;
     private Button btnOk, btnClear, btnExport, btnClose;
+    private SearchableSpinner spinnerSelectVlpdNo;
 
     FragmentUtils fragmentUtils;
     private Common common = null;
@@ -87,7 +91,7 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
     //For Honey well barcode
     private static BarcodeReader barcodeReader;
     private AidcManager manager;
-    String storageloc = null, clientId = null;
+    String vlpdNo = "", clientId = null;
     ArrayList<String> sloc;
     SoundUtils sound = null;
     private ExceptionLoggerUtils exceptionLoggerUtils;
@@ -126,6 +130,7 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
         rlMap = (RelativeLayout) rootView.findViewById(R.id.rlMap);
 
         lblSuggestedDoc = (TextView) rootView.findViewById(R.id.lblSuggestedDoc);
+        txtVLPD = (TextView) rootView.findViewById(R.id.txtVLPD);
 
         cvScanPallet = (CardView) rootView.findViewById(R.id.cvScanPallet);
         cvScanDockLocation = (CardView) rootView.findViewById(R.id.cvScanDockLocation);
@@ -138,7 +143,6 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
         txtInputLayoutDock = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutDock);
 
         etPallet = (CustomEditText) rootView.findViewById(R.id.etPallet);
-        etVLPD = (CustomEditText) rootView.findViewById(R.id.etVLPD);
         etDock = (CustomEditText) rootView.findViewById(R.id.etDock);
 
         btnClose = (Button) rootView.findViewById(R.id.btnClose);
@@ -161,6 +165,20 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
         gson = new GsonBuilder().create();
         core = new WMSCoreMessage();
         soundUtils = new SoundUtils();
+
+        spinnerSelectVlpdNo = (SearchableSpinner) rootView.findViewById(R.id.spinnerSelectVlpdNo);
+        spinnerSelectVlpdNo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                vlpdNo = spinnerSelectVlpdNo.getSelectedItem().toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         // For Cipher Barcode reader
         Intent RTintent = new Intent("sw.reader.decode.require");
@@ -190,22 +208,11 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
 
         rlMap.setVisibility(View.GONE);
 
-        txtInputLayoutVLPD.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                } else {
-                    if (!etVLPD.getText().toString().isEmpty()) {
 
-                        GetVLPDDockLocation();
-                    }
-                }
-            }
-        });
 
         if (getArguments() != null) {
 
-            etVLPD.setText(getArguments().getString("vlpdNo"));
+            txtVLPD.setText(getArguments().getString("vlpdNo"));
             lblSuggestedDoc.setText(getArguments().getString("SuggestedDoc"));
             etDock.setText(getArguments().getString("Dock"));
             etPallet.setText(getArguments().getString("pallet"));
@@ -225,16 +232,17 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
             }
         }
 
+        GetVLPDListforMapping();
+
     }
 
     private void GetVLPDDockLocation() {
-
 
         try {
             WMSCoreMessage message = new WMSCoreMessage();
             message = common.SetAuthentication(EndpointConstants.VLPDDTO, getContext());
             VlpdDto vlpdDto = new VlpdDto();
-            vlpdDto.setvLPDNumber(etVLPD.getText().toString());
+            vlpdDto.setvLPDNumber(vlpdNo);
             message.setEntityObject(vlpdDto);
 
             Call<String> call = null;
@@ -292,6 +300,7 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
                                         return;
                                     } else {
                                         vlpdDockLocation = dto.getResult().toString();
+                                        txtVLPD.setText(vlpdNo);
                                         lblSuggestedDoc.setText(dto.getResult().toString());
                                         rlMap.setVisibility(View.VISIBLE);
                                     }
@@ -343,6 +352,111 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
 
     }
 
+
+    private void GetVLPDListforMapping() {
+
+        try {
+            WMSCoreMessage message = new WMSCoreMessage();
+            message = common.SetAuthentication(EndpointConstants.VLPDDTO, getContext());
+            VlpdDto vlpdDto = new VlpdDto();
+            vlpdDto.setiD(userId);
+            message.setEntityObject(vlpdDto);
+
+            Call<String> call = null;
+            ApiInterface apiService =
+                    RestService.getClient().create(ApiInterface.class);
+
+            try {
+                call = apiService.GetVLPDListforMapping(message);
+                ProgressDialogUtils.showProgressDialog("Please Wait");
+
+            } catch (Exception ex) {
+                try {
+                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetOpenRefNumberList_01", getActivity());
+                    logException();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ProgressDialogUtils.closeProgressDialog();
+                common.showUserDefinedAlertType(errorMessages.EMC_0002, getActivity(), getContext(), "Error");
+            }
+            try {
+                //Getting response from the method
+                call.enqueue(new Callback<String>() {
+
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        try {
+                            core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
+                            if ((core.getType().toString().equals("Exception"))) {
+                                List<LinkedTreeMap<?, ?>> _lExceptions = new ArrayList<LinkedTreeMap<?, ?>>();
+                                _lExceptions = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
+
+                                WMSExceptionMessage owmsExceptionMessage = null;
+                                for (int i = 0; i < _lExceptions.size(); i++) {
+                                    owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
+                                }
+                                ProgressDialogUtils.closeProgressDialog();
+                                common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
+                            } else {
+
+                                core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
+
+                                List<LinkedTreeMap<?, ?>> _lstvlpd = new ArrayList<LinkedTreeMap<?, ?>>();
+                                _lstvlpd = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
+                                List<String> lstvlpdnumbers= new ArrayList<String>();
+                                VlpdDto dto = null;
+                                for (int i = 0; i < _lstvlpd.size(); i++) {
+                                    dto = new VlpdDto(_lstvlpd.get(i).entrySet());
+                                    lstvlpdnumbers.add(dto.getvLPDNumber());
+                                }
+                                ProgressDialogUtils.closeProgressDialog();
+                                ArrayAdapter arrayAdapterStoreRefNo = new ArrayAdapter(getActivity(), R.layout.support_simple_spinner_dropdown_item, lstvlpdnumbers);
+                                spinnerSelectVlpdNo.setAdapter(arrayAdapterStoreRefNo);
+
+                            }
+                        } catch (Exception ex) {
+                            try {
+                                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetOpenRefNumberList_02", getActivity());
+                                logException();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            ProgressDialogUtils.closeProgressDialog();
+                        }
+                    }
+
+                    // response object fails
+                    @Override
+                    public void onFailure(Call<String> call, Throwable throwable) {
+                        //Toast.makeText(LoginActivity.this, throwable.toString(), Toast.LENGTH_LONG).show();
+                        ProgressDialogUtils.closeProgressDialog();
+                        common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
+                    }
+                });
+            } catch (Exception ex) {
+                try {
+                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetOpenRefNumberList_03", getActivity());
+                    logException();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ProgressDialogUtils.closeProgressDialog();
+                common.showUserDefinedAlertType(errorMessages.EMC_0001, getActivity(), getContext(), "Error");
+            }
+        } catch (Exception ex) {
+            try {
+                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "GetOpenRefNumberList_04", getActivity());
+                logException();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ProgressDialogUtils.closeProgressDialog();
+            common.showUserDefinedAlertType(errorMessages.EMC_0003, getActivity(), getContext(), "Alert");
+        }
+
+    }
+
     //button Clicks
     @Override
     public void onClick(View v) {
@@ -352,7 +466,7 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.btnOk:
 
-                if (!etVLPD.getText().toString().isEmpty()) {
+                if (!vlpdNo.isEmpty()) {
 
                     GetVLPDDockLocation();
                     ClearFields();
@@ -364,13 +478,16 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
             case R.id.btnClear:
 
                 ClearFields();
+                txtVLPD.setText("");
+                vlpdNo ="";
                 rlMap.setVisibility(View.GONE);
+
                 break;
 
 
             case R.id.btnExport:
 
-                if (!etVLPD.getText().toString().isEmpty()) {
+                if (!vlpdNo.isEmpty()) {
                     goToExport();
                 } else {
                     common.showUserDefinedAlertType(errorMessages.EMC_0039, getActivity(), getContext(), "Error");
@@ -387,7 +504,7 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
 
     public void goToExport() {
         Bundle bundle = new Bundle();
-        bundle.putString("vlpdNo", etVLPD.getText().toString());
+        bundle.putString("vlpdNo", vlpdNo);
         bundle.putString("Dock", etDock.getText().toString());
         bundle.putString("pallet", etPallet.getText().toString());
         bundle.putString("SuggestedDoc", lblSuggestedDoc.getText().toString());
@@ -409,6 +526,7 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
         etDock.setText("");
         etPallet.setText("");
         //etVLPD.setText("");
+
         lblSuggestedDoc.setText("");
 
     }
@@ -541,7 +659,7 @@ public class MapPalletDockLoc extends Fragment implements View.OnClickListener, 
             WMSCoreMessage message = new WMSCoreMessage();
             message = common.SetAuthentication(EndpointConstants.VLPDDTO, getContext());
             VlpdDto vlpdDto = new VlpdDto();
-            vlpdDto.setvLPDNumber(etVLPD.getText().toString());
+            vlpdDto.setvLPDNumber(vlpdNo);
             vlpdDto.setPickedPalletNumber(etPallet.getText().toString());
             vlpdDto.setLocation(etDock.getText().toString());
             message.setEntityObject(vlpdDto);

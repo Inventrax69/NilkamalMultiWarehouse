@@ -199,7 +199,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
 
         childModelsList = new ArrayList<>();
 
-        childModel = new MenuModel("Pick", false, false, "Pick");
+        childModel = new MenuModel("Picking", false, false, "Picking");
         childModelsList.add(childModel);
 
         childModel = new MenuModel("Pick on Demand", false, false, "Pick on Demand");
@@ -211,7 +211,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         childModel = new MenuModel("Mattress Bundle", false, false, "Mattress Bundle");
         childModelsList.add(childModel);
 
-        childModel = new MenuModel("VLPD Loading", false, false, "VLPD Loading");
+        childModel = new MenuModel("Loading", false, false, "Loading");
         childModelsList.add(childModel);
 
 /*        childModel = new MenuModel("NonRSN Picking", false, false, "VLPD Picking");
@@ -510,7 +510,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
                     FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new RsnTrackFragment());
                     break;
 
-                case "Pick":
+                case "Picking":
                     FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new PickFragmentHU());
                     break;
 
@@ -522,7 +522,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
                     FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new MapPalletDockLoc());
                     break;
 
-                case "VLPD Loading":
+                case "Loading":
                     FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new VLPDLoadingFragment());
                     break;
 

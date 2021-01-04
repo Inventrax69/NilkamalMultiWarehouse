@@ -141,7 +141,6 @@ public interface ApiInterface {
     @POST("VLPD/GetItemtoPick")
     Call<String> GetItemtoPick(@Body WMSCoreMessage oRequest);
 
-    //Prasanna
     @POST("VLPD/ValidateBarcodeAndConfirmPicking")
     Call<String> ValidateBarcodeAndConfirmPicking(@Body WMSCoreMessage oRequest);
 
@@ -154,11 +153,9 @@ public interface ApiInterface {
     @POST("VLPD/GetOpenVLPDListByPriority")
     Call<String> GetOpenVLPDListByPriority(@Body WMSCoreMessage oRequest);
 
-    //Prasanna
     @POST("VLPD/GetHHLoadingInfo")
     Call<String> GetHHLoadingInfo(@Body WMSCoreMessage oRequest);
 
-    //Prasanna
     @POST("VLPD/ConfirmHHBoxLoading")
     Call<String> ConfirmHHBoxLoading(@Body WMSCoreMessage oRequest);
 
@@ -277,8 +274,7 @@ public interface ApiInterface {
 
     @POST("ECOM/PrintEcomLabelsForFurniture")
     Call<String> PrintEcomLabelsForFurniture(@Body WMSCoreMessage oRequest);
-
-    // Padmaja
+    
     // NON RSN VLPD PICKING
     @POST("VLPD/GetVLPDsForNonRSN")
     Call<String> GetVLPDsForNonRSN(@Body WMSCoreMessage oRequest);
@@ -311,5 +307,10 @@ public interface ApiInterface {
 
     @POST("Transfers/ConfirmNonRSNBinToBinInternalTransfer")
     Call<String> ConfirmNonRSNBinToBinInternalTransfer(@Body WMSCoreMessage oRequest);
+
+    @POST("VLPD/GetVLPDListforMapping")
+    Call<String> GetVLPDListforMapping(@Body WMSCoreMessage oRequest);
+
+
 
 }

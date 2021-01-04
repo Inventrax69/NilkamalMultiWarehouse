@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -78,7 +79,8 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
     private ImageView ivScanPallet, ivScanBarcode, ivScanOldRsn, ivScanNewRsn;
     private TextInputLayout txtInputLayoutVLPD, txtInputLayoutPallet, txtInputLayoutQty;
     private SearchableSpinner spinnerSelectReason;
-    private CustomEditText etVLPD, etPallet, etQty, etOldRsn, etNewRsn, etQtyPrint, etPrinterIP;
+    private EditText etVLPD;
+    private CustomEditText etPallet, etQty, etOldRsn, etNewRsn, etQtyPrint, etPrinterIP;
     private Button btnOk, btnClose, btnSkip, btnExport, btnPick, btnCloseOne, btnSkipItem, btnCloseTwo, btnPrint, btnClosePrint;
     private boolean _isPrintWindowRequired = false;
     private String _oldRSNNumber = null, PickQty = null;
@@ -165,7 +167,7 @@ public class PickOnDemandFragmentHU extends Fragment implements View.OnClickList
 
         etPallet = (CustomEditText) rootView.findViewById(R.id.etPallet);
         etQty = (CustomEditText) rootView.findViewById(R.id.etQty);
-        etVLPD = (CustomEditText) rootView.findViewById(R.id.etVLPD);
+        etVLPD = (EditText) rootView.findViewById(R.id.etVLPD);
         etOldRsn = (CustomEditText) rootView.findViewById(R.id.etOldRsn);
         etNewRsn = (CustomEditText) rootView.findViewById(R.id.etNewRsn);
         etQtyPrint = (CustomEditText) rootView.findViewById(R.id.etQtyPrint);

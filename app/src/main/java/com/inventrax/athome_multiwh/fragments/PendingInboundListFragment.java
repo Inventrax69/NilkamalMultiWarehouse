@@ -66,7 +66,7 @@ public class PendingInboundListFragment extends Fragment implements View.OnClick
     private String storeRefNo = null;
 
     private String pallet=null,location=null,rsn = null,L = null,B= null,H= null,
-            W= null,box = null,qty= null,vol=null,twt=null,caseString=null, sku=null,desc=null,ean=null,count=null;
+            W= null,box = null,qty= null,vol=null,twt=null,caseString=null, sku=null,desc=null,ean=null,count=null,po_sloc = null;
     private  boolean IsLocationEnabled=false,IsPalletEnabled=false,IsReceivingBin=false;
 
     Bundle bundle;
@@ -137,6 +137,7 @@ public class PendingInboundListFragment extends Fragment implements View.OnClick
                 sku = getArguments().getString("sku");
                 desc = getArguments().getString("desc");
                 count = getArguments().getString("count");
+                po_sloc = getArguments().getString("posloc");
                 IsPalletEnabled= getArguments().getBoolean("IsPalletEnabled");
                 IsLocationEnabled= getArguments().getBoolean("IsLocationEnabled");
                 IsReceivingBin=getArguments().getBoolean("IsReceivingBin");
@@ -213,6 +214,7 @@ public class PendingInboundListFragment extends Fragment implements View.OnClick
             bundle.putString("sku",sku);
             bundle.putString("desc",desc);
             bundle.putString("count",count);
+            bundle.putString("posloc",po_sloc);
             bundle.putBoolean("IsPalletEnabled",IsPalletEnabled);
             bundle.putBoolean("IsLocationEnabled",IsLocationEnabled);
             bundle.putBoolean("IsReceivingBin",IsReceivingBin);

@@ -977,7 +977,7 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
                                     ClearUIElemennts();
                                     lblBox.setText("");
                                     lblReqQty.setText("");
-                                    common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Error");
+                                    common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Success");
                                     return;
                                 }
                                 if (dto.getSuggestedItem() != null) {
@@ -1003,7 +1003,7 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
                                         } else {
                                         }
                                     } else {
-                                        common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Error");
+                                        common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Success");
                                         return;
                                     }
                                 }
@@ -1192,7 +1192,7 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
                                                 ShowPrintPanel();
                                             }
 
-                                            common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Error");
+                                            common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Success");
                                             rlPick.setVisibility(View.VISIBLE);
                                             rlPrint.setVisibility(View.GONE);
                                             rlSelectReason.setVisibility(View.GONE);
@@ -1207,7 +1207,7 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
 
                                     } else {
                                         ProgressDialogUtils.closeProgressDialog();
-                                        common.showUserDefinedAlertType(errorMessages.EMC_039, getActivity(), getContext(), "Error");
+                                        common.showUserDefinedAlertType(errorMessages.EMC_039, getActivity(), getContext(), "Success");
                                         clearFields();
                                         ClearFields();
                                         return;
@@ -1217,8 +1217,6 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
                             }else{
                                 common.showUserDefinedAlertType("Please connect support team", getActivity(), getContext(), "Error");
                             }
-
-
 
                         } catch (Exception ex) {
                             try {
@@ -1618,7 +1616,7 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
 
                                     lblBox.setText("");
                                     lblReqQty.setText("");
-                                    common.showUserDefinedAlertType("No item pending to pick with ref:" + lblRefNo.getText().toString(), getActivity(), getContext(), "Error");
+                                    common.showUserDefinedAlertType("No item pending to pick with ref:" + lblRefNo.getText().toString(), getActivity(), getContext(), "Success");
                                     ClearFields();
                                     ClearUIElemennts();
                                     GetAllOpenVLPDList();
@@ -1693,7 +1691,7 @@ public class PickFragmentHU extends Fragment implements View.OnClickListener, Ba
                                             ClearUIElemennts();
                                         }
                                     } else {
-                                        common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Error");
+                                        common.showUserDefinedAlertType(errorMessages.EMC_0043.replace("[Reference]", lblRefNo.getText()), getActivity(), getContext(), "Success");
                                         return;
                                     }
                                 }
